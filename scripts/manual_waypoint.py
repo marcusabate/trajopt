@@ -26,11 +26,11 @@ from geometry_msgs.msg import Point, Quaternion, Pose, PoseArray
 # points defined below; adjust to change waypoints:
 point_list = []
 point_list.append(Point(0,0,0))
-point_list.append(Point(1,1,1))
-point_list.append(Point(2,3,6))
-point_list.append(Point(3,3,8))
-point_list.append(Point(4,7,20))
-point_list.append(Point(5,5,15))
+point_list.append(Point(1,1,2))
+point_list.append(Point(2,2,4))
+point_list.append(Point(3,3,6))
+point_list.append(Point(4,4,20))
+point_list.append(Point(5,5,25))
 
 orientation = Quaternion(0,0,0,1)
 
