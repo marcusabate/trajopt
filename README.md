@@ -12,3 +12,12 @@ Simulation/visualization is done via yunchang's gazebo simulator (https://github
 # Install Instructions
 
 wip
+
+
+# Usage Instructions
+
+1. roscore
+2. rosrun tf static_transform_publisher 0 0 0 0 0 0 1 world map 10
+3. rosrun rviz rviz
+4. rosrun trajopt manual_waypoint.py
+4. rosrun trajopt traj_generator

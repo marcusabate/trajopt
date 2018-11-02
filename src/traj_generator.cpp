@@ -1,14 +1,23 @@
-/* traj_generator.cpp 
- * 
+/* traj_generator.cpp
+ *
  * This code grabs waypoints from the /waypoints rostopic
- * and then computes a trajectory between them using 
- * the standard nlopt methods given by the 
+ * and then computes a trajectory between them using
+ * the standard nlopt methods given by the
  * mav_trajectory_generation package. It then publishes
  * this trajectory to rviz as well as poses for the drone
  * to follow either on hardware on in gazebo
  *
  * Marcus Abate
  */
+
+
+/* TO DO:
+ 				Include some way to do static_transform_publisher quickly here to make quicker
+				Build a launch file for everything
+				Make sure this trajectory is actually optimal
+				It needs to output something that controller can actually use
+				Incorporate controller here
+*/
 
 #include <mav_trajectory_generation/polynomial_optimization_nonlinear.h>
 #include <mav_trajectory_generation/trajectory.h>
@@ -45,7 +54,7 @@ mav_trajectory_generation::Vertex::Vector get_waypoints()
 
 	mav_trajectory_generation::Vertex::Vector waypoints;
 	mav_trajectory_generation::Vertex start(dimension), end(dimension); // the two guaranteed waypoints
-	
+
 	//First waypoint picked up is the start
 	start.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[0].position.x,pose_array.poses[0].position.y,pose_array.poses[0].position.z), derivative_to_optimize);
 	waypoints.push_back(start);
@@ -55,7 +64,6 @@ mav_trajectory_generation::Vertex::Vector get_waypoints()
 		mav_trajectory_generation::Vertex middle(dimension); // a middle waypoint
 		middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(pose_array.poses[i].position.x,pose_array.poses[i].position.y,pose_array.poses[i].position.z));
 		waypoints.push_back(middle);
-
 	}
 
 	//Final waypoint in the list is the end
@@ -72,8 +80,9 @@ mav_trajectory_generation::Trajectory get_trajectory(mav_trajectory_generation::
 	std::vector<double> segment_times;
 	const double v_max = 2.0;
 	const double a_max = 2.0;
-	const double magic_fabian_constant = 6.5; // A tuning parameter.
-	segment_times = estimateSegmentTimes(waypoints, v_max, a_max, magic_fabian_constant);
+	// const double magic_fabian_constant = 6.5; // A tuning parameter. Seems deprecated
+	// segment_times = estimateSegmentTimes(waypoints, v_max, a_max, magic_fabian_constant);
+	segment_times = estimateSegmentTimes(waypoints, v_max, a_max);
 
 	mav_trajectory_generation::NonlinearOptimizationParameters parameters;
 	parameters.max_iterations = 1000;
@@ -104,7 +113,7 @@ void rviz_publish(mav_trajectory_generation::Trajectory trajectory)
 {
 	//visualization:
 	ros::Time::init();
-	
+
 	visualization_msgs::MarkerArray markers;
 	double distance = 1.0; // Distance by which to seperate additional markers. Set 0.0 to disable.
 	std::string frame_id = "world";
@@ -122,7 +131,7 @@ void rviz_publish(mav_trajectory_generation::Trajectory trajectory)
 	while(marker_pub.getNumSubscribers() < 1)
 	{
 		//if(!ros::ok()) { return 0; }
-		ROS_WARN_ONCE("Please create a subscriber to the marker");
+		ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
 		sleep(1);
 	}
 

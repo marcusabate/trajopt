@@ -1,4 +1,4 @@
-// testing trajectory generation and visualization using linear method
+ // testing trajectory generation and visualization using linear method
 
 #include <mav_trajectory_generation/polynomial_optimization_linear.h>
 #include <mav_trajectory_generation/trajectory.h>
@@ -25,8 +25,9 @@ int main(int argc, char** argv)
 	std::vector<double> segment_times;
 	const double v_max = 2.0;
 	const double a_max = 2.0;
-	const double magic_fabian_constant = 6.5; // A tuning parameter.
-	segment_times = estimateSegmentTimes(vertices, v_max, a_max, magic_fabian_constant);
+	// const double magic_fabian_constant = 6.5; // A tuning parameter. Seems deprecated
+	// segment_times = estimateSegmentTimes(vertices, v_max, a_max, magic_fabian_constant);
+	segment_times = estimateSegmentTimes(vertices, v_max, a_max);
 
 	const int N = 10;
 	mav_trajectory_generation::PolynomialOptimization<N> opt(dimension);
@@ -48,7 +49,7 @@ int main(int argc, char** argv)
 
 	//visualization:
 	ros::Time::init();
-	
+
 	visualization_msgs::MarkerArray markers;
 	double distance = 1.0; // Distance by which to seperate additional markers. Set 0.0 to disable.
 	std::string frame_id = "world";
