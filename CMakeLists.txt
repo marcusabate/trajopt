@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(trajectory_test_pkg)
+project(trajopt)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -103,7 +103,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES trajectory_test_pkg
+#  LIBRARIES trajopt
 #  CATKIN_DEPENDS mav_trajectory_generation mav_trajectory_generation_ros
 #  DEPENDS system_lib
 )
@@ -121,7 +121,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/trajectory_test_pkg.cpp
+#   src/${PROJECT_NAME}/trajopt.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -132,7 +132,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/trajectory_test_pkg_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/trajopt_node.cpp)
 add_executable(traj_test_viz src/traj_test_viz.cpp)
 add_executable(traj_generator src/traj_generator.cpp)
 
@@ -199,7 +199,7 @@ target_link_libraries(traj_generator
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_trajectory_test_pkg.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_trajopt.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
