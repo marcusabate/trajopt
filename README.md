@@ -1,8 +1,14 @@
-# trajectory_test_pkg
-Catkin package to generate trajectories for px4 drone as a test
+# trajopt
+Catkin package to generate trajectories for a px4 drone based on high-level user determined waypoints.
 
-This package tests usage of mav_trajectory_generation from ethz-asl (found at: https://github.com/ethz-asl/mav_trajectory_generation)
-It also tests visualization via yunchang's gazebo simulator (found at: https://github.mit.edu/yunchang/aero_quadsim)
+This package utilizes the mav_trajectory_generation package from ethz-asl (found at: https://github.com/ethz-asl/mav_trajectory_generation)
+mav_trajectory_generation is used to optimize trajectories through defined waypoints for both actuator limitations and fast execution.
 
-This project will conclude with a working implementation of UNCO in c++ used in place of nlopt, as is currently used in the
-mav_trajectory_generation package.
+Trajectory information is then sent to a low level controller developed as a part of MIT's 16.s398 VNAV 2018 Class (found at: https://github.mit.edu/VNAV2018)
+The controller can be used either in simulation or directly onboard the px4 drone system.
+
+Simulation/visualization is done via yunchang's gazebo simulator (found at: https://github.mit.edu/yunchang/aero_quadsim)
+
+# Install Instructions
+
+wip
