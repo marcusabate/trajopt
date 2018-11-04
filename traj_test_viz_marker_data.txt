@@ -1,0 +1,1763 @@
+marcus@marcus-Surface-Book:~$ rostopic echo /visualization_marker_array
+markers:
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 0
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.2627281171e-07
+        y: 6.90567126796e-07
+        z: 1.00000025255
+      -
+        x: 0.300000126179
+        y: 6.89547900617e-07
+        z: 0.999992754623
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 1
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.2627281171e-07
+        y: 6.90567126796e-07
+        z: 1.00000025255
+      -
+        x: 1.2627281171e-07
+        y: 0.300000687795
+        z: 0.999959472204
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 2
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.2627281171e-07
+        y: 6.90567126796e-07
+        z: 1.00000025255
+      -
+        x: 7.62419564781e-06
+        y: 4.14709085851e-05
+        z: 1.30000024968
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "acceleration"
+    id: 3
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.745098054409
+      g: 0.317647069693
+      b: 0.313725501299
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.2627281171e-07
+        y: 6.90567126796e-07
+        z: 1.00000025255
+      -
+        x: 0.000245247802305
+        y: 0.00133387842328
+        z: 1.0004904956
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "velocity"
+    id: 4
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.313725501299
+      g: 0.674509823322
+      b: 0.768627464771
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.2627281171e-07
+        y: 6.90567126796e-07
+        z: 1.00000025255
+      -
+        x: 6.36529575982e-06
+        y: 3.47367629837e-05
+        z: 1.00001273059
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 5
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.265359602675
+        y: 0.924082019624
+        z: 1.53071920535
+      -
+        x: 0.56526764242
+        y: 0.923976348816
+        z: 1.5232924611
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 6
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.265359602675
+        y: 0.924082019624
+        z: 1.53071920535
+      -
+        x: 0.265359602675
+        y: 1.22405165706
+        z: 1.52645111251
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 7
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.265359602675
+        y: 0.924082019624
+        z: 1.53071920535
+      -
+        x: 0.272787098648
+        y: 0.928348804151
+        z: 1.83059689184
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "acceleration"
+    id: 8
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.745098054409
+      g: 0.317647069693
+      b: 0.313725501299
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.265359602675
+        y: 0.924082019624
+        z: 1.53071920535
+      -
+        x: 0.520925567613
+        y: 1.0708939343
+        z: 2.04185113523
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "velocity"
+    id: 9
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.313725501299
+      g: 0.674509823322
+      b: 0.768627464771
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.265359602675
+        y: 0.924082019624
+        z: 1.53071920535
+      -
+        x: 0.618243612262
+        y: 1.88047424054
+        z: 2.23648722452
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 10
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.621911811377
+        y: 1.65187298446
+        z: 2.24382362275
+      -
+        x: 0.921874845706
+        y: 1.65214799592
+        z: 2.23912230328
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 11
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.621911811377
+        y: 1.65187298446
+        z: 2.24382362275
+      -
+        x: 0.621911811377
+        y: 1.9513610192
+        z: 2.2613426709
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 12
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.621911811377
+        y: 1.65187298446
+        z: 2.24382362275
+      -
+        x: 0.626621167608
+        y: 1.63435609499
+        z: 2.54327475491
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "acceleration"
+    id: 13
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.745098054409
+      g: 0.317647069693
+      b: 0.313725501299
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.621911811377
+        y: 1.65187298446
+        z: 2.24382362275
+      -
+        x: 0.781152860376
+        y: 1.05956105949
+        z: 2.56230572075
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "velocity"
+    id: 14
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.313725501299
+      g: 0.674509823322
+      b: 0.768627464771
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.621911811377
+        y: 1.65187298446
+        z: 2.24382362275
+      -
+        x: 1.14749238936
+        y: 2.41508038616
+        z: 3.29498477871
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 15
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.07545848028
+        y: 2.02348295887
+        z: 3.15091696055
+      -
+        x: 1.37545736787
+        y: 2.02340860213
+        z: 3.15173054069
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 16
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.07545848028
+        y: 2.02348295887
+        z: 3.15091696055
+      -
+        x: 1.07545848028
+        y: 2.32223781097
+        z: 3.17822150865
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 17
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.07545848028
+        y: 2.02348295887
+        z: 3.15091696055
+      -
+        x: 1.07464150931
+        y: 1.99617851201
+        z: 3.44967070486
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "acceleration"
+    id: 18
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.745098054409
+      g: 0.317647069693
+      b: 0.313725501299
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.07545848028
+        y: 2.02348295887
+        z: 3.15091696055
+      -
+        x: 1.04878593063
+        y: 1.13204465812
+        z: 3.09757186126
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "velocity"
+    id: 19
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.313725501299
+      g: 0.674509823322
+      b: 0.768627464771
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.07545848028
+        y: 2.02348295887
+        z: 3.15091696055
+      -
+        x: 1.65872195876
+        y: 2.14748101067
+        z: 4.31744391752
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 20
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.51297768138
+        y: 1.86695241893
+        z: 4.02595536276
+      -
+        x: 1.8129098277
+        y: 1.86662491822
+        z: 4.0323272028
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 21
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.51297768138
+        y: 1.86695241893
+        z: 4.02595536276
+      -
+        x: 1.51297768138
+        y: 2.16655693705
+        z: 4.04135447716
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 22
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.51297768138
+        y: 1.86695241893
+        z: 4.02595536276
+      -
+        x: 1.50659743043
+        y: 1.85155678749
+        z: 4.32549211665
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "acceleration"
+    id: 23
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.745098054409
+      g: 0.317647069693
+      b: 0.313725501299
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.51297768138
+        y: 1.86695241893
+        z: 4.02595536276
+      -
+        x: 1.31261832624
+        y: 1.38348259725
+        z: 3.62523665249
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "velocity"
+    id: 24
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.313725501299
+      g: 0.674509823322
+      b: 0.768627464771
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.51297768138
+        y: 1.86695241893
+        z: 4.02595536276
+      -
+        x: 2.00028901777
+        y: 1.40682259595
+        z: 5.00057803554
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 25
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.90092279623
+        y: 1.26116861398
+        z: 4.80184559246
+      -
+        x: 2.2007982795
+        y: 1.2615429552
+        z: 4.81048008146
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 26
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.90092279623
+        y: 1.26116861398
+        z: 4.80184559246
+      -
+        x: 1.90092279623
+        y: 1.56088707303
+        z: 4.78885154366
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "pose"
+    id: 27
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.90092279623
+        y: 1.26116861398
+        z: 4.80184559246
+      -
+        x: 1.89228019642
+        y: 1.27415726953
+        z: 5.10143965164
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "acceleration"
+    id: 28
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.745098054409
+      g: 0.317647069693
+      b: 0.313725501299
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.90092279623
+        y: 1.26116861398
+        z: 4.80184559246
+      -
+        x: 1.63344322215
+        y: 1.66315414247
+        z: 4.2668864443
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "velocity"
+    id: 29
+    type: 0
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.03
+      y: 0.06
+      z: 0.0
+    color:
+      r: 0.313725501299
+      g: 0.674509823322
+      b: 0.768627464771
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 1.90092279623
+        y: 1.26116861398
+        z: 4.80184559246
+      -
+        x: 2.10589396436
+        y: 0.789685153739
+        z: 5.21178792871
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1541360429
+        nsecs: 940326658
+      frame_id: "world"
+    ns: "path"
+    id: 30
+    type: 4
+    action: 0
+    pose:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+    scale:
+      x: 0.01
+      y: 0.0
+      z: 0.0
+    color:
+      r: 1.0
+      g: 0.5
+      b: 0.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points:
+      -
+        x: 0.0
+        y: 0.0
+        z: 1.0
+      -
+        x: 1.2627281171e-07
+        y: 6.90567126796e-07
+        z: 1.00000025255
+      -
+        x: 3.80790602201e-06
+        y: 2.05978116371e-05
+        z: 1.00000761581
+      -
+        x: 2.72364373341e-05
+        y: 0.000145651050492
+        z: 1.00005447287
+      -
+        x: 0.000108052773172
+        y: 0.000570961798135
+        z: 1.00021610555
+      -
+        x: 0.000310288263274
+        y: 0.00161924641141
+        z: 1.00062057653
+      -
+        x: 0.000726176507594
+        y: 0.00374044960257
+        z: 1.00145235302
+      -
+        x: 0.00147551081963
+        y: 0.00749728671164
+        z: 1.00295102164
+      -
+        x: 0.00270314293635
+        y: 0.0135408245517
+        z: 1.00540628587
+      -
+        x: 0.00457514351823
+        y: 0.0225796563445
+        z: 1.00915028704
+      -
+        x: 0.00727407422277
+        y: 0.0353456957475
+        z: 1.01454814845
+      -
+        x: 0.0109937546627
+        y: 0.0525591182414
+        z: 1.02198750933
+      -
+        x: 0.0159338453735
+        y: 0.0748945151922
+        z: 1.03186769075
+      -
+        x: 0.0222945100175
+        y: 0.102949896732
+        z: 1.04458902003
+      -
+        x: 0.0302713664388
+        y: 0.137219784211
+        z: 1.06054273288
+      -
+        x: 0.0400508868592
+        y: 0.178073271368
+        z: 1.08010177372
+      -
+        x: 0.0518063624693
+        y: 0.225737605526
+        z: 1.10361272494
+      -
+        x: 0.0656945069144
+        y: 0.280287546098
+        z: 1.13138901383
+      -
+        x: 0.081852736718
+        y: 0.341640497395
+        z: 1.16370547344
+      -
+        x: 0.100397134501
+        y: 0.409557186256
+        z: 1.200794269
+      -
+        x: 0.121421072973
+        y: 0.483647462325
+        z: 1.24284214595
+      -
+        x: 0.144994454065
+        y: 0.563380639867
+        z: 1.28998890813
+      -
+        x: 0.171163498263
+        y: 0.64809967487
+        z: 1.34232699653
+      -
+        x: 0.199951004156
+        y: 0.737038379842
+        z: 1.39990200831
+      -
+        x: 0.231356987511
+        y: 0.829340821105
+        z: 1.46271397502
+      -
+        x: 0.265359602675
+        y: 0.924082019624
+        z: 1.53071920535
+      -
+        x: 0.301916246998
+        y: 1.02028908636
+        z: 1.603832494
+      -
+        x: 0.340964751039
+        y: 1.11696196691
+        z: 1.68192950208
+      -
+        x: 0.382424563764
+        y: 1.21309304782
+        z: 1.76484912753
+      -
+        x: 0.42619785261
+        y: 1.30768498807
+        z: 1.85239570522
+      -
+        x: 0.472170453294
+        y: 1.39976628464
+        z: 1.94434090659
+      -
+        x: 0.520212623484
+        y: 1.48840425975
+        z: 2.04042524697
+      -
+        x: 0.570179578045
+        y: 1.57271537003
+        z: 2.14035915609
+      -
+        x: 0.621911811377
+        y: 1.65187298446
+        z: 2.24382362275
+      -
+        x: 0.675235244509
+        y: 1.72511305809
+        z: 2.35047048902
+      -
+        x: 0.72996127103
+        y: 1.79173844245
+        z: 2.45992254206
+      -
+        x: 0.785886816644
+        y: 1.85112292169
+        z: 2.57177363329
+      -
+        x: 0.842794572107
+        y: 1.90271644451
+        z: 2.68558914421
+      -
+        x: 0.90045360861
+        y: 1.94605343802
+        z: 2.80090721722
+      -
+        x: 0.958620638207
+        y: 1.98076653807
+        z: 2.91724127641
+      -
+        x: 1.01704223982
+        y: 2.00660855236
+        z: 3.03408447964
+      -
+        x: 1.07545848028
+        y: 2.02348295887
+        z: 3.15091696055
+      -
+        x: 1.13360841494
+        y: 2.03145409696
+        z: 3.26721682987
+      -
+        x: 1.19123583452
+        y: 2.03072118397
+        z: 3.38247166905
+      -
+        x: 1.24809319042
+        y: 2.02159340678
+        z: 3.49618638084
+      -
+        x: 1.3039438601
+        y: 2.00447386645
+        z: 3.6078877202
+      -
+        x: 1.35856329202
+        y: 1.9798495752
+        z: 3.71712658404
+      -
+        x: 1.41173947729
+        y: 1.94828505738
+        z: 3.82347895458
+      -
+        x: 1.46327310572
+        y: 1.91041757358
+        z: 3.92654621144
+      -
+        x: 1.51297768138
+        y: 1.86695241893
+        z: 4.02595536276
+      -
+        x: 1.56067979723
+        y: 1.81865714285
+        z: 4.12135959446
+      -
+        x: 1.60621970044
+        y: 1.76635389832
+        z: 4.21243940088
+      -
+        x: 1.64945221886
+        y: 1.71090945392
+        z: 4.29890443772
+      -
+        x: 1.69024806533
+        y: 1.65322269154
+        z: 4.38049613066
+      -
+        x: 1.72849549005
+        y: 1.59420966645
+        z: 4.45699098009
+      -
+        x: 1.76410221155
+        y: 1.53478652535
+        z: 4.5282044231
+      -
+        x: 1.79699752491
+        y: 1.47585076048
+        z: 4.59399504981
+      -
+        x: 1.82713446047
+        y: 1.41826142544
+        z: 4.65426892095
+      -
+        x: 1.85449184883
+        y: 1.36281905021
+        z: 4.70898369765
+      -
+        x: 1.87907613682
+        y: 1.31024606881
+        z: 4.75815227364
+      -
+        x: 1.90092279623
+        y: 1.26116861398
+        z: 4.80184559246
+      -
+        x: 1.92009717016
+        y: 1.21610053815
+        z: 4.84019434032
+      -
+        x: 1.93669461335
+        y: 1.17543048952
+        z: 4.8733892267
+      -
+        x: 1.95083980062
+        y: 1.1394128061
+        z: 4.90167960123
+      -
+        x: 1.96268510289
+        y: 1.10816288877
+        z: 4.92537020579
+      -
+        x: 1.97240796292
+        y: 1.08165757745
+        z: 4.94481592585
+      -
+        x: 1.98020724228
+        y: 1.05974088151
+        z: 4.96041448456
+      -
+        x: 1.98629855825
+        y: 1.0421352074
+        z: 4.9725971165
+      -
+        x: 1.9909086832
+        y: 1.02845798245
+        z: 4.98181736639
+      -
+        x: 1.99426914031
+        y: 1.01824329448
+        z: 4.98853828061
+      -
+        x: 1.99660919795
+        y: 1.01096785171
+        z: 4.9932183959
+      -
+        x: 1.99814854064
+        y: 1.00608021697
+        z: 4.99629708127
+      -
+        x: 1.99908997733
+        y: 1.00303188404
+        z: 4.99817995466
+      -
+        x: 1.99961263784
+        y: 1.0013083422
+        z: 4.99922527569
+      -
+        x: 1.99986620533
+        y: 1.00045781778
+        z: 4.99973241065
+      -
+        x: 1.99996683717
+        y: 1.00011488878
+        z: 4.99993367433
+      -
+        x: 1.9999955383
+        y: 1.00001563999
+        z: 4.99999107661
+      -
+        x: 1.9999998696
+        y: 1.00000046226
+        z: 4.99999973919
+    colors: []
+    text: ''
+    mesh_resource: ''
+    mesh_use_embedded_materials: False

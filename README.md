@@ -21,3 +21,14 @@ wip
 3. rosrun rviz rviz
 4. rosrun trajopt manual_waypoint.py
 4. rosrun trajopt traj_generator
+
+In order to run the simulate_trajectory program:
+
+1. roscore
+2. rosrun tf static_transform_publisher 0 0 0 0 0 0 1 world map 10
+3. rosrun trajopt manual_waypoint.py
+4. cd ~/catkin_ws/src/aero_quadsim
+5. source .Simbash
+6. roslaunch aero_quadsim aero_sitl.launch
+7. rosrun aero_quadsim simulate_trajectory
+8. rosrun trajopt traj_generator 
