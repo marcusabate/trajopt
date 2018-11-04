@@ -1,4 +1,4 @@
- // testing trajectory generation and visualization using linear method
+// testing trajectory generation and visualization using linear method
 
 #include <mav_trajectory_generation/polynomial_optimization_linear.h>
 #include <mav_trajectory_generation/trajectory.h>

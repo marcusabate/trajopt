@@ -22,7 +22,9 @@
 #include <mav_trajectory_generation/polynomial_optimization_nonlinear.h>
 #include <mav_trajectory_generation/trajectory.h>
 #include <mav_trajectory_generation_ros/ros_visualization.h>
+#include <mav_trajectory_generation_ros/feasibility_analytic.h>
 #include <geometry_msgs/PoseArray.h>
+#include <tuple>
 #include "ros/ros.h"
 using namespace std;
 
@@ -141,6 +143,39 @@ void rviz_publish(mav_trajectory_generation::Trajectory trajectory)
 			  // if there is no sleep?
 }
 
+// mav_trajectory_generation::InputFeasibilityResult get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
+// {
+// 	// Check input feasibility for generated trajectory.
+//
+// 	// Create input constraints:
+// 	typedef mav_trajectory_generation::InputConstraintType ICT;
+// 	mav_trajectory_generation::InputConstraints input_constraints;
+// 	input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
+// 	input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
+// 	input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
+// 	input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
+// 	input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
+// 	input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
+//
+// 	mav_trajectory_generation::FeasibilityAnalytic feasibility_check(input_constraints);
+// 	feasibility_check.settings_.setMinSectionTimeS(0.01);
+//
+//	mav_trajectory_generation::Segment::Vector segments = trajectory.segments();
+// 	int vec_size = segments.size();
+// 	mav_trajectory_generation::InputFeasibilityResult::Vector result (vec_size);
+//
+// 	for (unsigned i; i<vec_size; i++)
+// 	{
+// 		segment = segments[i]
+// 		result[i] = feasibility_check.checkInputFeasibility(segment);
+// 	}
+// 	//mav_trajectory_generation::InputFeasibilityResult::Vector result = feasibility_check.checkInputFeasibility(segments);
+//
+// 	std::cout << "The segment input is " << getInputFeasibilityResultName(result) << "." << std::endl;
+//
+// 	return result;
+// }
+
 int main(int argc, char **argv)
 {
 	//Listen to /waypoints to get waypoints:
@@ -149,7 +184,13 @@ int main(int argc, char **argv)
 	mav_trajectory_generation::Vertex::Vector waypoints = get_waypoints();
 
 	//Get Trajectory:
-	mav_trajectory_generation::Trajectory trajectory = get_trajectory(waypoints);
+	mav_trajectory_generation::Trajectory trajectory;
+	mav_trajectory_generation::Segment::Vector segments;
+	trajectory = get_trajectory(waypoints);
+
+	// Check input feasibility:
+	// mav_trajectory_generation::InputFeasibilityResult feasibility_result = get_feasibility_result(trajectory);
+	// std::cout << "Feasibility result:" << feasibility_result ;
 
 	//Visualization in rviz:
 	rviz_publish(trajectory);
