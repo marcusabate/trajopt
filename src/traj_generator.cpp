@@ -21,10 +21,17 @@
 
 #include <mav_trajectory_generation/polynomial_optimization_nonlinear.h>
 #include <mav_trajectory_generation/trajectory.h>
+#include <mav_trajectory_generation/trajectory_sampling.h>
+
 #include <mav_trajectory_generation_ros/ros_visualization.h>
 #include <mav_trajectory_generation_ros/feasibility_analytic.h>
+#include <mav_trajectory_generation_ros/ros_conversions.h>
+
+#include <mav_msgs/conversions.h>
+#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs/default_topics.h>
+#include <trajectory_msgs/MultiDOFJointTrajectory.h>
 #include <geometry_msgs/PoseArray.h>
-#include <tuple>
 #include "ros/ros.h"
 using namespace std;
 
@@ -138,9 +145,76 @@ void rviz_publish(mav_trajectory_generation::Trajectory trajectory)
 	}
 
 	marker_pub.publish(markers);
-
 	sleep(1); // I had to include this or for some reason the data didn't get published. Maybe main loop closes too quickly
 			  // if there is no sleep?
+}
+
+void trajectory_command_publish(mav_trajectory_generation::Trajectory trajectory)
+{
+	// publish the entire trajectory command at once.
+	// this will be a MultiDOFJointTrajectory message for use with controller_node
+	// see trajectory_sampler_node.cpp for other methods
+	ros::Time::init();
+
+	const double sampling_time = 0.1;
+
+	mav_msgs::EigenTrajectoryPoint::Vector flat_states;
+	mav_trajectory_generation::sampleWholeTrajectory(trajectory, sampling_time,
+																									 &flat_states);
+	trajectory_msgs::MultiDOFJointTrajectory cmd_msg;
+	msgMultiDofJointTrajectoryFromEigen(flat_states, &cmd_msg);
+
+	ros::NodeHandle nh_cmd;
+	ros::Rate r(1);
+	ros::Publisher command_pub =
+			nh_cmd.advertise<trajectory_msgs::MultiDOFJointTrajectory>(
+					mav_msgs::default_topics::COMMAND_TRAJECTORY, 1);
+
+	while(command_pub.getNumSubscribers() < 1)
+	{
+		//if(!ros::ok()) { return 0; }
+		ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
+		sleep(1);
+	}
+
+	command_pub.publish(cmd_msg);
+	sleep(1);
+}
+
+void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
+{
+	// publish the trajectory as a polynomialTrajectoryMsg to be back-converted
+	// to a trajectory by the trajectory_sampler_node
+	cout << "instantiating msg now:" << endl;
+	mav_planning_msgs::PolynomialTrajectory4D* traj_msg;
+	std::string frame_id = "world";
+	traj_msg->header.frame_id = frame_id;
+	cout << "header set" << endl;
+	bool success = mav_trajectory_generation::trajectoryToPolynomialTrajectoryMsg(
+											trajectory, traj_msg);
+
+	ros::Time::init();
+	ros::NodeHandle nh_traj;
+	ros::Rate r(1);
+	ros::Publisher trajectory_pub =
+			nh_traj.advertise<mav_planning_msgs::PolynomialTrajectory4D>(
+					"path_segments", 1);
+
+	if (success) {
+		while(trajectory_pub.getNumSubscribers() < 1)
+		{
+			//if(!ros::ok()) { return 0; }
+			ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
+			sleep(1);
+		}
+
+		trajectory_pub.publish(*traj_msg);
+	}
+	else {
+		cout << "Unable to convert trajectory to message format" << endl;
+		ROS_WARN("Unable to convert trajectory to message format");
+	}
+	sleep(1);
 }
 
 // mav_trajectory_generation::InputFeasibilityResult get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
@@ -192,8 +266,15 @@ int main(int argc, char **argv)
 	// mav_trajectory_generation::InputFeasibilityResult feasibility_result = get_feasibility_result(trajectory);
 	// std::cout << "Feasibility result:" << feasibility_result ;
 
-	//Visualization in rviz:
+	// Visualization in rviz:
 	rviz_publish(trajectory);
+	cout << "rviz publish done" << endl;
+
+	// Control publishing:
+	//trajectory_publish(trajectory);
+	//cout << "traj publish done" << endl;
+	trajectory_command_publish(trajectory);
+	cout << "cmd publish done" << endl;
 
 	return 0;
 }
