@@ -1,25 +1,29 @@
 /* UNCO_polynomial_optimization.cpp
- * 
+ *
  * Marcus Abate 2018
- * 
- * This algorithm optimizes the trajectory of a drone as given by the waypoints 
+ *
+
+ IGNORE THIS FILE; IT IS INCOMPLETE
+
+
+ * This algorithm optimizes the trajectory of a drone as given by the waypoints
  * it follows.
- * It is based heavily on the work done on nonlinear optimization by ethz-asl 
- * group in their project, mav_trajectory_generation found at: 
+ * It is based heavily on the work done on nonlinear optimization by ethz-asl
+ * group in their project, mav_trajectory_generation found at:
  * https://github.com/ethz-asl/mav_trajectory_generation
  *
  * NOTES:
  *    first go at this looks identical to matlab code, probably is really slow.
  *    need to figure out how to speed it up, probably mirror the work done in
  *    polynomial_optimization_nonlinear.h and its implementation
- * 
+ *
  *    need to figure out what other optimization params are needed.
  *    check the work done in polyomial_optimization_nonlinear.h
  *
  */
 
 #include <mav_trajectory_generation/polynomial_optimization_nonlinear.h>
-#include <mav_trajectory_generation/trajectory.h> 
+#include <mav_trajectory_generation/trajectory.h>
 
 namespace mav_trajectory_generation {
 
@@ -29,7 +33,7 @@ struct OptimizationParameters {
     // Default parameters should be good enough for optimization in general cases:
     : poly_order(9),
       C_penalty({0,0,0,1,0,0,0,0,0}) {}
-  
+
   // The order of the polynomial. Doesn't include the zeroth order, so a 9th order poly
   // will have 10 coefficients.
   int poly_order;
@@ -69,7 +73,7 @@ class UNCO_polynomial_optimization {
     type b_p_opt;             // Optimal free derivative values after UNCO completes
 
     // Parameterized constructor. Sets class attributes needed to perform optimization.
-    UNCO_polynomial_optimization(Vertex::Vector wp, 
+    UNCO_polynomial_optimization(Vertex::Vector wp,
                             const OptimizationParameters& parameters) {
       waypoints = wp;
       num_waypoints = waypoints.size();
@@ -96,6 +100,6 @@ class UNCO_polynomial_optimization {
         this.Q
       }
     }
-  
+
 } // UNCO_polynomial_optimization class
 } // namespace
