@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find aero_quadsim)/launch/aero_sitl.launch" />
+  <node name="wp_pub" pkg="trajopt" type="manual_waypoint.py" />
+  <node name="simulate_traj" pkg="trajopt" type="simulate_trajectory" />
+  <node name="traj_gen" pkg="trajopt" type="traj_generator" />
+</launch>

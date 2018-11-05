@@ -14,9 +14,10 @@
 
     CURRENTLY THE EXECUTABLE VERSION OF THIS FILE IS LOCATED IN THE
     aero_quadsim DIRECTORY BECAUSE THE aero_ctrl.h FILE IS THERE.
+        SINCE HAS BEEN MADE TO WORK HERE, BUT UNTESTED.
 */
 
-#include <aero_quadsim/aero_ctrl.h>
+#include "../../aero_quadsim/src/aero_ctrl.h"
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <geometry_msgs/Point.h>
@@ -32,10 +33,10 @@ void marker_sub_cb(const visualization_msgs::MarkerArray::ConstPtr& msg) {
 
 int main(int arc, char** argv)
 {
-  // ROS setup:
+  // ROS and control setup:
   ros::init(arc, argv, "simulate_trajectory");
   ROS_INFO("Simulate optimized trajectory through desired waypoints");
-  aero_quadsim::aero_ctrl control;
+  aero_ctrl control;
 
   // get the drone in the air:
   control.arm();

@@ -56,7 +56,8 @@ mav_trajectory_generation::Vertex::Vector get_waypoints()
 	//ros::NodeHandle n;
 	//ros::Subscriber sub = n.subscribe("waypoints", 1000, waypointCallback);
 	//ros::spin();
-	boost::shared_ptr<geometry_msgs::PoseArray const> pose_array_ptr = ros::topic::waitForMessage<geometry_msgs::PoseArray>("/waypoints");
+	boost::shared_ptr<geometry_msgs::PoseArray const> pose_array_ptr =
+							ros::topic::waitForMessage<geometry_msgs::PoseArray>("/waypoints");
 	geometry_msgs::PoseArray pose_array = *pose_array_ptr;
 
 	int pose_size = pose_array.poses.size();
@@ -65,24 +66,34 @@ mav_trajectory_generation::Vertex::Vector get_waypoints()
 	mav_trajectory_generation::Vertex start(dimension), end(dimension); // the two guaranteed waypoints
 
 	//First waypoint picked up is the start
-	start.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[0].position.x,pose_array.poses[0].position.y,pose_array.poses[0].position.z), derivative_to_optimize);
+	start.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[0].position.x,
+																			 pose_array.poses[0].position.y,
+																			 pose_array.poses[0].position.z),
+																			 derivative_to_optimize);
 	waypoints.push_back(start);
 
 	for (int i=1; i<pose_size-1; i++)
 	{
 		mav_trajectory_generation::Vertex middle(dimension); // a middle waypoint
-		middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION, Eigen::Vector3d(pose_array.poses[i].position.x,pose_array.poses[i].position.y,pose_array.poses[i].position.z));
+		middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION,
+						Eigen::Vector3d(pose_array.poses[i].position.x,
+														pose_array.poses[i].position.y,
+														pose_array.poses[i].position.z));
 		waypoints.push_back(middle);
 	}
 
 	//Final waypoint in the list is the end
-	end.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[pose_size-1].position.x,pose_array.poses[pose_size-1].position.y,pose_array.poses[pose_size-1].position.z), derivative_to_optimize);
+	end.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[pose_size-1].position.x,
+																		 pose_array.poses[pose_size-1].position.y,
+																		 pose_array.poses[pose_size-1].position.z),
+																		 derivative_to_optimize);
 	waypoints.push_back(end);
 
 	return waypoints;
 }
 
-mav_trajectory_generation::Trajectory get_trajectory(mav_trajectory_generation::Vertex::Vector waypoints)
+mav_trajectory_generation::Trajectory get_trajectory(
+					mav_trajectory_generation::Vertex::Vector waypoints)
 {
 	// The following is standard optimization and segment production from the usual examples:
 
@@ -128,14 +139,16 @@ void rviz_publish(mav_trajectory_generation::Trajectory trajectory)
 	std::string frame_id = "world";
 
 	// From Trajectory class:
-	mav_trajectory_generation::drawMavTrajectory(trajectory, distance, frame_id, &markers);
+	mav_trajectory_generation::drawMavTrajectory(trajectory, distance,
+																								frame_id, &markers);
 
 	//cout << "\n\nmarkers: \n" << markers << "\n";
 
 	//publishing the visualization:
 	ros::NodeHandle n;
 	ros::Rate r(1);
-	ros::Publisher marker_pub = n.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 0);
+	ros::Publisher marker_pub = n.advertise<visualization_msgs::MarkerArray>(
+				"visualization_marker_array", 0);
 
 	while(marker_pub.getNumSubscribers() < 1)
 	{
@@ -168,7 +181,8 @@ void trajectory_command_publish(mav_trajectory_generation::Trajectory trajectory
 	ros::Rate r(1);
 	ros::Publisher command_pub =
 			nh_cmd.advertise<trajectory_msgs::MultiDOFJointTrajectory>(
-					mav_msgs::default_topics::COMMAND_TRAJECTORY, 1);
+				//	mav_msgs::default_topics::COMMAND_TRAJECTORY, 1);
+					"desired_state", 1);
 
 	while(command_pub.getNumSubscribers() < 1)
 	{
@@ -187,8 +201,15 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 	// to a trajectory by the trajectory_sampler_node
 	cout << "instantiating msg now:" << endl;
 	mav_planning_msgs::PolynomialTrajectory4D* traj_msg;
-	std::string frame_id = "world";
-	traj_msg->header.frame_id = frame_id;
+
+	// std::string frame_id = "world";
+	// std_msgs::Header header;
+	// header.frame_id = frame_id;
+	// header.stamp = ros::Time::now();
+	//
+	// traj_msg->header = header;
+	//traj_msg->segments.reserve(trajectory.segments().size());
+
 	cout << "header set" << endl;
 	bool success = mav_trajectory_generation::trajectoryToPolynomialTrajectoryMsg(
 											trajectory, traj_msg);
@@ -217,38 +238,38 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 	sleep(1);
 }
 
-// mav_trajectory_generation::InputFeasibilityResult get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
-// {
-// 	// Check input feasibility for generated trajectory.
-//
-// 	// Create input constraints:
-// 	typedef mav_trajectory_generation::InputConstraintType ICT;
-// 	mav_trajectory_generation::InputConstraints input_constraints;
-// 	input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
-// 	input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
-// 	input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
-// 	input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
-// 	input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
-// 	input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
-//
-// 	mav_trajectory_generation::FeasibilityAnalytic feasibility_check(input_constraints);
-// 	feasibility_check.settings_.setMinSectionTimeS(0.01);
-//
-//	mav_trajectory_generation::Segment::Vector segments = trajectory.segments();
-// 	int vec_size = segments.size();
-// 	mav_trajectory_generation::InputFeasibilityResult::Vector result (vec_size);
-//
-// 	for (unsigned i; i<vec_size; i++)
-// 	{
-// 		segment = segments[i]
-// 		result[i] = feasibility_check.checkInputFeasibility(segment);
-// 	}
-// 	//mav_trajectory_generation::InputFeasibilityResult::Vector result = feasibility_check.checkInputFeasibility(segments);
-//
-// 	std::cout << "The segment input is " << getInputFeasibilityResultName(result) << "." << std::endl;
-//
-// 	return result;
-// }
+std::vector<mav_trajectory_generation::InputFeasibilityResult>
+		get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
+{
+	// Check input feasibility for generated trajectory.
+
+	// Create input constraints:
+	typedef mav_trajectory_generation::InputConstraintType ICT;
+	mav_trajectory_generation::InputConstraints input_constraints;
+	input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
+	input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
+	input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
+	input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
+	input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
+	input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
+
+	mav_trajectory_generation::FeasibilityAnalytic feasibility_check(input_constraints);
+	feasibility_check.settings_.setMinSectionTimeS(0.01);
+
+	mav_trajectory_generation::Segment::Vector segments = trajectory.segments();
+	int vec_size = segments.size();
+	std::vector<mav_trajectory_generation::InputFeasibilityResult> result (vec_size);
+
+	for (unsigned i; i<vec_size; i++)
+	{
+		result[i] = feasibility_check.checkInputFeasibility(segments[i]);
+	}
+	//mav_trajectory_generation::InputFeasibilityResult::Vector result = feasibility_check.checkInputFeasibility(segments);
+
+	//std::cout << "The segment input is " << getInputFeasibilityResultName(result) << "." << std::endl;
+
+	return result;
+}
 
 int main(int argc, char **argv)
 {
@@ -263,8 +284,14 @@ int main(int argc, char **argv)
 	trajectory = get_trajectory(waypoints);
 
 	// Check input feasibility:
-	// mav_trajectory_generation::InputFeasibilityResult feasibility_result = get_feasibility_result(trajectory);
-	// std::cout << "Feasibility result:" << feasibility_result ;
+	std::vector<mav_trajectory_generation::InputFeasibilityResult>
+				feasibility_result = get_feasibility_result(trajectory);
+
+	for (unsigned i; i<feasibility_result.size(); i++)
+	{
+			std::cout << "Feasibility result segment " << i << ": "
+				<< mav_trajectory_generation::getInputFeasibilityResultName(feasibility_result[i]) << endl;
+	}
 
 	// Visualization in rviz:
 	rviz_publish(trajectory);
