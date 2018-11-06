@@ -1,0 +1,5 @@
+<launch>
+  <node name="world_tf_pub" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 world map 10" />
+  <node name="rviz" pkg="rviz" type="rviz" />
+  <node name="traj_gen_test" pkg="trajopt" type="traj_test_viz" />
+</launch>
