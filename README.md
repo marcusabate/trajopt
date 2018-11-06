@@ -13,7 +13,7 @@ Simulation/visualization is done via yunchang's gazebo simulator [aero_quadsim](
 
 ## Install Instructions
 
-WORK IN PROGRESS but essentially follow the install instructions for both ```mav_trajectory_generation``` and ```aero_quadsim```, and then clone this repo into your workspace.
+**WORK IN PROGRESS** *but essentially follow the install instructions for both ```mav_trajectory_generation``` and ```aero_quadsim```, and then clone this repo into your workspace.*
 
 
 ## Trajectory Generation
