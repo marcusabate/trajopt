@@ -10,15 +10,6 @@
  * Marcus Abate
  */
 
-
-/* TO DO:
- 				Include some way to do static_transform_publisher quickly here to make quicker
-				Build a launch file for everything
-				Make sure this trajectory is actually optimal
-				It needs to output something that controller can actually use
-				Incorporate controller here
-*/
-
 #include <mav_trajectory_generation/polynomial_optimization_nonlinear.h>
 #include <mav_trajectory_generation/trajectory.h>
 #include <mav_trajectory_generation/trajectory_sampling.h>
@@ -167,6 +158,7 @@ void trajectory_command_publish(mav_trajectory_generation::Trajectory trajectory
 	// publish the entire trajectory command at once.
 	// this will be a MultiDOFJointTrajectory message for use with controller_node
 	// see trajectory_sampler_node.cpp for other methods
+
 	ros::Time::init();
 
 	const double sampling_time = 0.1;
@@ -186,7 +178,7 @@ void trajectory_command_publish(mav_trajectory_generation::Trajectory trajectory
 
 	while(command_pub.getNumSubscribers() < 1)
 	{
-		//if(!ros::ok()) { return 0; }
+		if(!ros::ok()) { return 0; }
 		ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
 		sleep(1);
 	}
@@ -264,9 +256,6 @@ std::vector<mav_trajectory_generation::InputFeasibilityResult>
 	{
 		result[i] = feasibility_check.checkInputFeasibility(segments[i]);
 	}
-	//mav_trajectory_generation::InputFeasibilityResult::Vector result = feasibility_check.checkInputFeasibility(segments);
-
-	//std::cout << "The segment input is " << getInputFeasibilityResultName(result) << "." << std::endl;
 
 	return result;
 }
@@ -280,7 +269,6 @@ int main(int argc, char **argv)
 
 	//Get Trajectory:
 	mav_trajectory_generation::Trajectory trajectory;
-	mav_trajectory_generation::Segment::Vector segments;
 	trajectory = get_trajectory(waypoints);
 
 	// Check input feasibility:
