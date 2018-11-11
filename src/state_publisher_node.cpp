@@ -10,6 +10,8 @@
 
 #include <mav_trajectory_generation_ros/ros_visualization.h>
 #include <mav_trajectory_generation_ros/ros_conversions.h>
+#include <mav_trajectory_generation/trajectory.h>
+#include <mav_trajectory_generation/trajectory_sampling.h>
 
 #include <mav_msgs/conversions.h>
 #include <mav_msgs/eigen_mav_msgs.h>
@@ -18,27 +20,31 @@
 
 class StatePublisherNode
 {
+public:
   ros::NodeHandle nh;
   ros::Timer publish_timer;
   ros::Publisher command_pub;
   ros::Subscriber trajectory_sub;
   ros::Time start_time;
-  ros::Rate r;
+  //ros::Rate r;
 
   double dt;
   double current_sample_time;
 
-  mav_trajectory_generation::Trajectory;
+  mav_trajectory_generation::Trajectory trajectory;
 
-  StatePublisherNode(const ros::Nodehandle& n)
+  StatePublisherNode(const ros::NodeHandle& n)
    :nh(n),
-    dt(0.01)
-    current_sample_time(0.0),
+    dt(0.01),
+    current_sample_time(0.0)
   {
-    command_pub = nh.advertise<trajectory_msgs::MultiDOFJointTrajectory>(
+    command_pub = nh.advertise<trajectory_msgs::MultiDOFJointTrajectoryPoint>(
       "desired_state", 1);
-    trajectory_sub = nh.subscribe("trajectory", 10, trajCallback);
-    publish_timer = nh.createTimer(ros::Duration(dt), &commandTimerCallback);
+    trajectory_sub = nh.subscribe("trajectory", 10,
+      &StatePublisherNode::trajCallback, this);
+    publish_timer = nh.createTimer(ros::Duration(dt),
+      &StatePublisherNode::commandTimerCallback, this);
+    ros::Rate r(1);
   }
 
   void trajCallback(const mav_planning_msgs::PolynomialTrajectory4D& segments_message)
@@ -67,27 +73,27 @@ class StatePublisherNode
   {
     if (current_sample_time <= trajectory.getMaxTime())
     {
-      trajectory_msgs::MultiDOFJointTrajectory msg;
+      trajectory_msgs::MultiDOFJointTrajectoryPoint msg;
       mav_msgs::EigenTrajectoryPoint flat_state;
       bool success = mav_trajectory_generation::sampleTrajectoryAtTime(
-        trajectory, current_sample_time, %flat_state);
+        trajectory, current_sample_time, &flat_state);
       if (!success) {
         ROS_WARN("Failure to sample trajectory at current time");
         publish_timer.stop();
       }
-      mav_msgs::msgMultiDofJointTrajectoryFromEigen(flat_state, &msg);
-      msg.points[0].time_from_start = ros::Duration(current_sample_time);
+      mav_msgs::msgMultiDofJointTrajectoryPointFromEigen(flat_state, &msg);
+      msg.time_from_start = ros::Duration(current_sample_time);
       command_pub.publish(msg);
       current_sample_time += dt;
     }
     else
     {
-      ROS_INFO("Full trajectory published to /desired_state.")
+      ROS_INFO("Full trajectory published to /desired_state.");
       publish_timer.stop();
     }
   }
 
-} // class StatePublisherNode
+}; // class StatePublisherNode
 
 int main(int argc, char** argv)
 {

@@ -136,7 +136,7 @@ std::vector<mav_trajectory_generation::InputFeasibilityResult>
 	return result;
 }
 
-std::string check_feasibility(mav_trajectory_generation::Trajectory)
+std::string check_feasibility(mav_trajectory_generation::Trajectory trajectory)
 {
 	std::vector<mav_trajectory_generation::InputFeasibilityResult>
 				feasibility_result = get_feasibility_result(trajectory);
@@ -147,9 +147,9 @@ std::string check_feasibility(mav_trajectory_generation::Trajectory)
 			feasibility_result[i]);
 		std::cout << "Feasibility result segment " << i << ": " << seg_result << std::endl;
 		if (seg_result != "Feasible") {
-			return "Infeasible"
+			return "Infeasible";
 		}
-	return "Feasible"
+	return "Feasible";
 	}
 }
 
@@ -159,7 +159,7 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 	// publish the trajectory as a polynomialTrajectoryMsg to be back-converted
 	// to a trajectory by the trajectory_sampler_node
 	std::cout << "instantiating msg now:" << std::endl;
-	mav_planning_msgs::PolynomialTrajectory4D* traj_msg;
+	mav_planning_msgs::PolynomialTrajectory4D traj_msg;
 
 	// std::string frame_id = "world";
 	// std_msgs::Header header;
@@ -171,7 +171,7 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 
 	std::cout << "header set" << std::endl;
 	bool success = mav_trajectory_generation::trajectoryToPolynomialTrajectoryMsg(
-											trajectory, traj_msg);
+											trajectory, &traj_msg);
 
 	ros::Time::init();
 	ros::NodeHandle nh_traj;
@@ -187,7 +187,7 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 			sleep(1);
 		}
 
-		trajectory_pub.publish(*traj_msg);
+		trajectory_pub.publish(traj_msg);
 	}
 	else {
 		std::cout << "Unable to convert trajectory to message format" << std::endl;
