@@ -27,7 +27,7 @@ import rospy
 from geometry_msgs.msg import Point, Quaternion, Pose, PoseArray
 
 # points defined below; adjust to change waypoints:
-waypoints = [[0,0,0], [1,1,1], [2,4,3], [3,4,3], [4,4,4], [5,5,2]]
+waypoints = [[0,0,0], [1,1,1], [2,2,2], [3,3,3], [4,4,4], [5,5,5], [5,5,0]]
 
 orientation = Quaternion(0,0,0,1)
 frame_id = None # may need to define as project gets more complex

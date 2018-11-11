@@ -10,9 +10,6 @@
  *
  */
 
- //   NOTE: instead of a commandTimerCallback, just listen to /desired_state
- //         and to /current_state and publish a message every single time.
-
 #include <mav_trajectory_generation_ros/ros_visualization.h>
 #include <mav_trajectory_generation_ros/ros_conversions.h>
 #include <mav_trajectory_generation/trajectory.h>

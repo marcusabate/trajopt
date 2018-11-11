@@ -156,18 +156,9 @@ std::string check_feasibility(mav_trajectory_generation::Trajectory trajectory)
 
 void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 {
-	// publish the trajectory as a polynomialTrajectoryMsg to be back-converted
-	// to a trajectory by the trajectory_sampler_node
+	// publish the trajectory as a polynomialTrajectoryMsg:
 	std::cout << "instantiating msg now:" << std::endl;
 	mav_planning_msgs::PolynomialTrajectory4D traj_msg;
-
-	// std::string frame_id = "world";
-	// std_msgs::Header header;
-	// header.frame_id = frame_id;
-	// header.stamp = ros::Time::now();
-	//
-	// traj_msg->header = header;
-	//traj_msg->segments.reserve(trajectory.segments().size());
 
 	std::cout << "header set" << std::endl;
 	bool success = mav_trajectory_generation::trajectoryToPolynomialTrajectoryMsg(
@@ -182,7 +173,6 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 
 	if (success) {
 		while(trajectory_pub.getNumSubscribers() < 1) {
-			//if(!ros::ok()) { return 0; }
 			ROS_WARN_ONCE("Please create a subscriber to the /trajectory rostopic");
 			sleep(1);
 		}
@@ -207,8 +197,7 @@ int main(int argc, char **argv)
 	// Check input feasibility:
 	std::string feasibility_result = check_feasibility(trajectory);
 	if (feasibility_result == "Infeasible") {
-		// ROS_ERROR('Infeasible Trajectory');
-		ROS_INFO("Infeasible trajectory segment. Failure to publish.");
+		ROS_WARN("Infeasible trajectory segment. Failure to publish.");
 		return 0;
 	}
 

@@ -26,7 +26,6 @@ public:
   ros::Publisher command_pub;
   ros::Subscriber trajectory_sub;
   ros::Time start_time;
-  //ros::Rate r;
 
   double dt;
   double current_sample_time;
