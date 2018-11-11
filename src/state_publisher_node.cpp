@@ -50,11 +50,11 @@ public:
   void trajCallback(const mav_planning_msgs::PolynomialTrajectory4D& segments_message)
   {
     if (segments_message.segments.empty()) {
-      ROS_WARN("Trajectory sampler: received empty waypoint message");
+      ROS_WARN("State Publisher: received empty waypoint message");
       return;
     }
     else {
-      ROS_INFO("Trajectory sampler: received %lu waypoints",
+      ROS_INFO("State Publisher: received %lu waypoints",
                segments_message.segments.size());
     }
 

@@ -1,7 +1,10 @@
 <launch>
   <node name="world_tf_pub" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 world map 10" />
+  <include file="$(find unity_bridge)/launch/unity_sim.launch" />
+  <node name="controller_node" pkg="trajopt" type="controller_node_sol" />
   <node name="rviz" pkg="rviz" type="rviz" />
   <node name="wp_pub" pkg="trajopt" type="manual_waypoint.py" />
   <node name="traj_gen_node" pkg="trajopt" type="traj_generator_node" />
+  <node name="state_pub_node" pkg="trajopt" type="state_publisher_node" />
   <node name="rviz_pub_node" pkg="trajopt" type="rviz_publisher_node" />
 </launch>

@@ -19,49 +19,54 @@
 #include <mav_trajectory_generation/trajectory_sampling.h>
 
 #include <trajectory_msgs/MultiDOFJointTrajectory.h>
+#include <geometry_msgs/Pose.h>
+#include <nav_msgs/Odometry.h>
 #include "ros/ros.h"
 
  class rvizPublisherNode
  {
  public:
     ros::NodeHandle nh;
-    ros::Timer publish_timer;
-    ros::Publisher marker_pub;
+    ros::Publisher traj_pub;
+    ros::Publisher current_state_pub;
     ros::Subscriber trajectory_sub;
-    ros::Time start_time;
+    ros::Subscriber current_state_sub;
+    // ros::Time start_time;
     //ros::Rate r;
 
-    double dt;
-    double current_sample_time;
+    // double dt;
+    // double current_sample_time;
 
     mav_trajectory_generation::Trajectory trajectory;
 
     visualization_msgs::MarkerArray traj_markers;
+    visualization_msgs::MarkerArray current_state_markers;
+    int state_count = 0; // for the marker.id of the current_state_markers
     double distance = 1.0; // Distance by which to seperate additional markers.
     std::string frame_id = "world";
 
     rvizPublisherNode(const ros::NodeHandle& n)
-    :nh(n),
-     dt(0.01),
-     current_sample_time(0.0)
+    :nh(n)
     {
-      marker_pub = nh.advertise<visualization_msgs::MarkerArray>(
-      			"visualization_marker_array", 0);
+      traj_pub = nh.advertise<visualization_msgs::MarkerArray>(
+      	"visualization_marker_array_1", 0);
+      current_state_pub = nh.advertise<visualization_msgs::MarkerArray>(
+        "visualization_marker_array_2", 0);
       trajectory_sub = nh.subscribe("trajectory", 10,
         &rvizPublisherNode::trajCallback, this);
-      publish_timer = nh.createTimer(ros::Duration(dt),
-        &rvizPublisherNode::controlTimerCallback, this);
+      current_state_sub = nh.subscribe("current_state", 100,
+        &rvizPublisherNode::currentStateSubCallback, this);
       ros::Rate r(1);
     }
 
     void trajCallback(const mav_planning_msgs::PolynomialTrajectory4D& segments_message)
     {
       if (segments_message.segments.empty()) {
-        ROS_WARN("Trajectory sampler: received empty waypoint message");
+        ROS_WARN("RVIZ Publisher: received empty waypoint message");
         return;
       }
       else {
-        ROS_INFO("Trajectory sampler: received %lu waypoints",
+        ROS_INFO("RVIZ Publisher: received %lu waypoints",
           segments_message.segments.size());
       }
 
@@ -71,29 +76,46 @@
         ROS_WARN("Failure to Convert Trajectory Message");
         return;
       }
-      publish_timer.start();
-      current_sample_time = 0.0;
-      start_time = ros::Time::now();
-
-      rviz_publish();
+      rviz_traj_publish();
     }
 
-    void controlTimerCallback(const ros::TimerEvent&)
+    void currentStateSubCallback(const nav_msgs::Odometry& current_state)
     {
-     // publish desired and current state of drone to RVIZ
+      geometry_msgs::Pose pose = current_state.pose.pose;
+      std_msgs::Header header = current_state.header;
+
+      state_count += 1;
+
+      visualization_msgs::Marker new_state_marker;
+      new_state_marker.pose = pose;
+      new_state_marker.header = header;
+      new_state_marker.id = state_count;
+      new_state_marker.type = visualization_msgs::Marker::SPHERE;
+      new_state_marker.action = visualization_msgs::Marker::ADD;
+      new_state_marker.scale.x = 0.2;
+      new_state_marker.scale.y = 0.2;
+      new_state_marker.scale.z = 0.2;
+      new_state_marker.color.a = 1;
+      new_state_marker.color.r = 0;
+      new_state_marker.color.g = 1;
+      new_state_marker.color.b = 0;
+      new_state_marker.lifetime = ros::Duration(0.0);
+
+      current_state_markers.markers.push_back(new_state_marker);
+      current_state_pub.publish(current_state_markers);
     }
 
-    void rviz_publish()
+    void rviz_traj_publish()
     {
     	// Trajectory visualization in RVIZ:
     	mav_trajectory_generation::drawMavTrajectory(trajectory, distance,
     																								frame_id, &traj_markers);
     	//publishing the visualization:
-    	while(marker_pub.getNumSubscribers() < 1) {
+    	while(traj_pub.getNumSubscribers() < 1) {
     		ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
     		sleep(1);
     	}
-    	marker_pub.publish(traj_markers);
+    	traj_pub.publish(traj_markers);
     	//sleep(1);
     }
   }; // class rvizPublisherNode
