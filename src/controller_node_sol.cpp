@@ -327,10 +327,10 @@ void controlLoop(const ros::TimerEvent& t){
   mav_msgs::Actuators rotor_speeds;
   rotor_speeds.header.stamp = ros::Time::now();
   rotor_speeds.angular_velocities.resize(4);
-  rotor_speeds.angular_velocities[0] = 50.0;
-  rotor_speeds.angular_velocities[1] = 50.0;
-  rotor_speeds.angular_velocities[2] = 50.0;
-  rotor_speeds.angular_velocities[3] = 50.0;
+  rotor_speeds.angular_velocities[0] = W[0];
+  rotor_speeds.angular_velocities[1] = W[1];
+  rotor_speeds.angular_velocities[2] = W[2];
+  rotor_speeds.angular_velocities[3] = W[3];
   rotor_speeds_pub.publish(rotor_speeds);
   // ~~~~ end solution
   //

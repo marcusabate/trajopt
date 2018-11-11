@@ -63,6 +63,7 @@ int main(int arc, char** argv)
   {
     float yaw = 0.0; // can probably get from trajectory.
     control.navigate_to_pose(positions[i].x, positions[i].y, positions[i].z, yaw);
+    sleep(5);
   }
 
   // Land and end sim.

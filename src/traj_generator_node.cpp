@@ -1,11 +1,10 @@
-/* traj_generator.cpp
+/* traj_generator_node.cpp
  *
  * This code grabs waypoints from the /waypoints rostopic
  * and then computes a trajectory between them using
  * the standard nlopt methods given by the
  * mav_trajectory_generation package. It then publishes
- * this trajectory to rviz as well as poses for the drone
- * to follow either on hardware on in gazebo
+ * this trajectory to /trajectory as a PolynomialSegment4D message.
  *
  * Marcus Abate
  */
@@ -14,7 +13,6 @@
 #include <mav_trajectory_generation/trajectory.h>
 #include <mav_trajectory_generation/trajectory_sampling.h>
 
-#include <mav_trajectory_generation_ros/ros_visualization.h>
 #include <mav_trajectory_generation_ros/feasibility_analytic.h>
 #include <mav_trajectory_generation_ros/feasibility_base.h>
 #include <mav_trajectory_generation_ros/ros_conversions.h>
@@ -22,7 +20,6 @@
 #include <mav_msgs/conversions.h>
 #include <mav_msgs/eigen_mav_msgs.h>
 #include <mav_msgs/default_topics.h>
-#include <trajectory_msgs/MultiDOFJointTrajectory.h>
 #include <geometry_msgs/PoseArray.h>
 #include "ros/ros.h"
 //using namespace std;
@@ -30,17 +27,6 @@
 const int dimension = 3;
 const int derivative_to_optimize = mav_trajectory_generation::derivative_order::SNAP;
 float temp_x, temp_y, temp_z;
-
-/*
-void waypointCallback(const geometry_msgs::Point::ConstPtr& msg)
-{
-	temp_x = msg->x;
-	temp_y = msg->y;
-	temp_z = msg->z;
-
-  	ROS_INFO("I heard: [%s]", msg->data.c_str());
-}
-*/
 
 mav_trajectory_generation::Vertex::Vector get_waypoints()
 {
@@ -121,71 +107,52 @@ mav_trajectory_generation::Trajectory get_trajectory(
 	return trajectory;
 }
 
-void rviz_publish(mav_trajectory_generation::Trajectory trajectory)
+std::vector<mav_trajectory_generation::InputFeasibilityResult>
+		get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
 {
-	//visualization:
-	ros::Time::init();
+	// Check input feasibility for generated trajectory.
 
-	visualization_msgs::MarkerArray markers;
-	double distance = 1.0; // Distance by which to seperate additional markers. Set 0.0 to disable.
-	std::string frame_id = "world";
+	// Create input constraints:
+	typedef mav_trajectory_generation::InputConstraintType ICT;
+	mav_trajectory_generation::InputConstraints input_constraints;
+	input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
+	input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
+	input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
+	input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
+	input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
+	input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
 
-	// From Trajectory class:
-	mav_trajectory_generation::drawMavTrajectory(trajectory, distance,
-																								frame_id, &markers);
+	mav_trajectory_generation::FeasibilityAnalytic feasibility_check(input_constraints);
+	feasibility_check.settings_.setMinSectionTimeS(0.01);
 
-	//std::cout << "\n\nmarkers: \n" << markers << "\n";
+	mav_trajectory_generation::Segment::Vector segments = trajectory.segments();
+	int vec_size = segments.size();
+	std::vector<mav_trajectory_generation::InputFeasibilityResult> result (vec_size);
 
-	//publishing the visualization:
-	ros::NodeHandle n;
-	ros::Rate r(1);
-	ros::Publisher marker_pub = n.advertise<visualization_msgs::MarkerArray>(
-				"visualization_marker_array", 0);
-
-	while(marker_pub.getNumSubscribers() < 1)
-	{
-		//if(!ros::ok()) { return 0; }
-		ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
-		sleep(1);
+	for (unsigned i; i<vec_size; i++) {
+		result[i] = feasibility_check.checkInputFeasibility(segments[i]);
 	}
 
-	marker_pub.publish(markers);
-	sleep(1); // I had to include this or for some reason the data didn't get published. Maybe main loop closes too quickly
-			  // if there is no sleep?
+	return result;
 }
 
-void trajectory_command_publish(mav_trajectory_generation::Trajectory trajectory)
+std::string check_feasibility(mav_trajectory_generation::Trajectory)
 {
-	// publish the entire trajectory command at once.
-	// this will be a MultiDOFJointTrajectory message for use with controller_node
-	// see trajectory_sampler_node.cpp for other methods
+	std::vector<mav_trajectory_generation::InputFeasibilityResult>
+				feasibility_result = get_feasibility_result(trajectory);
 
-	ros::Time::init();
-
-	const double sampling_time = 0.1;
-
-	mav_msgs::EigenTrajectoryPoint::Vector flat_states;
-	mav_trajectory_generation::sampleWholeTrajectory(trajectory, sampling_time,
-																									 &flat_states);
-	trajectory_msgs::MultiDOFJointTrajectory cmd_msg;
-	msgMultiDofJointTrajectoryFromEigen(flat_states, &cmd_msg);
-
-	ros::NodeHandle nh_cmd;
-	ros::Rate r(1);
-	ros::Publisher command_pub =
-			nh_cmd.advertise<trajectory_msgs::MultiDOFJointTrajectory>(
-				//	mav_msgs::default_topics::COMMAND_TRAJECTORY, 1);
-					"desired_state", 1);
-
-	while(command_pub.getNumSubscribers() < 1)
+	for (unsigned i; i<feasibility_result.size(); i++)
 	{
-		ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
-		sleep(1);
+		std::string seg_result = mav_trajectory_generation::getInputFeasibilityResultName(
+			feasibility_result[i]);
+		std::cout << "Feasibility result segment " << i << ": " << seg_result << std::endl;
+		if (seg_result != "Feasible") {
+			return "Infeasible"
+		}
+	return "Feasible"
 	}
-
-	command_pub.publish(cmd_msg);
-	sleep(1);
 }
+
 
 void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 {
@@ -211,13 +178,12 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 	ros::Rate r(1);
 	ros::Publisher trajectory_pub =
 			nh_traj.advertise<mav_planning_msgs::PolynomialTrajectory4D>(
-					"path_segments", 1);
+					"trajectory", 1);
 
 	if (success) {
-		while(trajectory_pub.getNumSubscribers() < 1)
-		{
+		while(trajectory_pub.getNumSubscribers() < 1) {
 			//if(!ros::ok()) { return 0; }
-			ROS_WARN_ONCE("Please create a subscriber to the MarkerArray");
+			ROS_WARN_ONCE("Please create a subscriber to the /trajectory rostopic");
 			sleep(1);
 		}
 
@@ -230,73 +196,24 @@ void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
 	sleep(1);
 }
 
-std::vector<mav_trajectory_generation::InputFeasibilityResult>
-		get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
-{
-	// Check input feasibility for generated trajectory.
-
-	// Create input constraints:
-	typedef mav_trajectory_generation::InputConstraintType ICT;
-	mav_trajectory_generation::InputConstraints input_constraints;
-	input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
-	input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
-	input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
-	input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
-	input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
-	input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
-
-	mav_trajectory_generation::FeasibilityAnalytic feasibility_check(input_constraints);
-	feasibility_check.settings_.setMinSectionTimeS(0.01);
-
-	mav_trajectory_generation::Segment::Vector segments = trajectory.segments();
-	int vec_size = segments.size();
-	std::vector<mav_trajectory_generation::InputFeasibilityResult> result (vec_size);
-
-	for (unsigned i; i<vec_size; i++)
-	{
-		result[i] = feasibility_check.checkInputFeasibility(segments[i]);
-	}
-
-	return result;
-}
-
 int main(int argc, char **argv)
 {
-	//Listen to /waypoints to get waypoints:
-	//ros::init(argc, argv, "waypoint_listener");
-	ros::init(argc, argv, "traj_generator");
+	ros::init(argc, argv, "traj_generator_node");
 	mav_trajectory_generation::Vertex::Vector waypoints = get_waypoints();
 
 	//Get Trajectory:
-	mav_trajectory_generation::Trajectory trajectory;
-	trajectory = get_trajectory(waypoints);
+	mav_trajectory_generation::Trajectory trajectory = get_trajectory(waypoints);
 
 	// Check input feasibility:
-	std::vector<mav_trajectory_generation::InputFeasibilityResult>
-				feasibility_result = get_feasibility_result(trajectory);
-
-	for (unsigned i; i<feasibility_result.size(); i++)
-	{
-		std::string seg_result = mav_trajectory_generation::getInputFeasibilityResultName(
-			feasibility_result[i]);
-		std::cout << "Feasibility result segment " << i << ": " << seg_result << std::endl;
-		if (seg_result != "Feasible")
-		{
-			// ROS_ERROR('Infeasible Trajectory');
-			ROS_INFO("Infeasible trajectory segment. Exiting.");
-			return 0;
-		}
+	std::string feasibility_result = check_feasibility(trajectory);
+	if (feasibility_result == "Infeasible") {
+		// ROS_ERROR('Infeasible Trajectory');
+		ROS_INFO("Infeasible trajectory segment. Failure to publish.");
+		return 0;
 	}
 
-	// Visualization in rviz:
-	rviz_publish(trajectory);
-	std::cout << "rviz publish done" << std::endl;
-
-	// Control publishing:
-	//trajectory_publish(trajectory);
-	//std::cout << "traj publish done" << std::endl;
-	trajectory_command_publish(trajectory);
-	std::cout << "cmd publish done" << std::endl;
+	// Publish trajectory:
+	trajectory_publish(trajectory);
 
 	return 0;
 }
