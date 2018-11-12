@@ -21,188 +21,193 @@
 #include <mav_msgs/eigen_mav_msgs.h>
 #include <mav_msgs/default_topics.h>
 #include <geometry_msgs/PoseArray.h>
+#include "std_msgs/String.h"
 #include "ros/ros.h"
 //using namespace std;
 
-const int dimension = 3;
-const int derivative_to_optimize = mav_trajectory_generation::derivative_order::SNAP;
-float temp_x, temp_y, temp_z;
+ class TrajGeneratorNode
+ {
+ public:
+		ros::NodeHandle nh;
+		ros::Publisher traj_pub;
+		ros::Publisher flag_pub;
+		ros::Subscriber waypoint_sub;
+		ros::Subscriber flag_sub;
 
-mav_trajectory_generation::Vertex::Vector get_waypoints()
-{
-	// First we create a subscriber to the /waypoints topic to pick them up:
-	//ros::NodeHandle n;
-	//ros::Subscriber sub = n.subscribe("waypoints", 1000, waypointCallback);
-	//ros::spin();
-	boost::shared_ptr<geometry_msgs::PoseArray const> pose_array_ptr =
-							ros::topic::waitForMessage<geometry_msgs::PoseArray>("/waypoints");
-	geometry_msgs::PoseArray pose_array = *pose_array_ptr;
+		mav_trajectory_generation::Vertex::Vector waypoints;
+		mav_trajectory_generation::NonlinearOptimizationParameters parameters;
+		mav_trajectory_generation::Segment::Vector segments;
+		mav_trajectory_generation::Trajectory trajectory;
 
-	int pose_size = pose_array.poses.size();
+		std::vector<double> segment_times;
+		const double v_max;
+		const double a_max;
+		static const int N = 10;
 
-	mav_trajectory_generation::Vertex::Vector waypoints;
-	mav_trajectory_generation::Vertex start(dimension), end(dimension); // the two guaranteed waypoints
+		const int dimension;
+		const int derivative_to_optimize;
+		float temp_x, temp_y, temp_z;
 
-	//First waypoint picked up is the start
-	start.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[0].position.x,
-																			 pose_array.poses[0].position.y,
-																			 pose_array.poses[0].position.z),
-																			 derivative_to_optimize);
-	waypoints.push_back(start);
+		mav_trajectory_generation::InputConstraints input_constraints;
+		std::vector<mav_trajectory_generation::InputFeasibilityResult>
+					feasibility_result;
+		bool isFeasible;
 
-	for (int i=1; i<pose_size-1; i++)
-	{
-		mav_trajectory_generation::Vertex middle(dimension); // a middle waypoint
-		middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION,
-						Eigen::Vector3d(pose_array.poses[i].position.x,
-														pose_array.poses[i].position.y,
-														pose_array.poses[i].position.z));
-		waypoints.push_back(middle);
-	}
+		TrajGeneratorNode(const ros::NodeHandle& n)
+		:nh(n),
+     // N(10),
+     dimension(3),
+     v_max(2.0),
+     a_max(2.0),
+     derivative_to_optimize(mav_trajectory_generation::derivative_order::SNAP)
+		{
+			traj_pub = nh.advertise<mav_planning_msgs::PolynomialTrajectory4D>(
+				"trajectory", 1);
+			flag_pub = nh.advertise<std_msgs::String>("flag_chatter", 1);
+			waypoint_sub = nh.subscribe("waypoints", 10,
+				&TrajGeneratorNode::waypointCallback, this);
+			flag_sub = nh.subscribe("flag_chatter", 10,
+				&TrajGeneratorNode::flagCallback, this);
+			ros::Rate r(1);
 
-	//Final waypoint in the list is the end
-	end.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[pose_size-1].position.x,
-																		 pose_array.poses[pose_size-1].position.y,
-																		 pose_array.poses[pose_size-1].position.z),
-																		 derivative_to_optimize);
-	waypoints.push_back(end);
+      // N = 10;
+      // dimension = 3;
+      // v_max = 2.0;
+      // a_max = 2.0;
+      // derivative_to_optimize = mav_trajectory_generation::derivative_order::SNAP;
 
-	return waypoints;
-}
+			parameters.max_iterations = 1000;
+			parameters.f_rel = 0.05;
+			parameters.x_rel = 0.1;
+			parameters.time_penalty = 500.0;
+			parameters.initial_stepsize_rel = 0.1;
+			parameters.inequality_constraint_tolerance = 0.1;
 
-mav_trajectory_generation::Trajectory get_trajectory(
-					mav_trajectory_generation::Vertex::Vector waypoints)
-{
-	// The following is standard optimization and segment production from the usual examples:
+			isFeasible = true;
+			typedef mav_trajectory_generation::InputConstraintType ICT;
 
-	std::vector<double> segment_times;
-	const double v_max = 2.0;
-	const double a_max = 2.0;
-	// const double magic_fabian_constant = 6.5; // A tuning parameter. Seems deprecated
-	// segment_times = estimateSegmentTimes(waypoints, v_max, a_max, magic_fabian_constant);
-	segment_times = estimateSegmentTimes(waypoints, v_max, a_max);
+			input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
+			input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
+			input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
+			input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
+			input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
+			input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
+ 		}
 
-	mav_trajectory_generation::NonlinearOptimizationParameters parameters;
-	parameters.max_iterations = 1000;
-	parameters.f_rel = 0.05;
-	parameters.x_rel = 0.1;
-	parameters.time_penalty = 500.0;
-	parameters.initial_stepsize_rel = 0.1;
-	parameters.inequality_constraint_tolerance = 0.1;
-
-	const int N = 10;
-	mav_trajectory_generation::PolynomialOptimizationNonLinear<N> opt(dimension, parameters);
-	opt.setupFromVertices(waypoints, segment_times, derivative_to_optimize);
-	opt.addMaximumMagnitudeConstraint(mav_trajectory_generation::derivative_order::VELOCITY, v_max);
-	opt.addMaximumMagnitudeConstraint(mav_trajectory_generation::derivative_order::ACCELERATION, a_max);
-	opt.optimize();
-
-	mav_trajectory_generation::Segment::Vector segments;
-	opt.getPolynomialOptimizationRef().getSegments(&segments);
-
-	//Now compute the trajectory:
-	mav_trajectory_generation::Trajectory trajectory;
-	opt.getTrajectory(&trajectory);
-
-	return trajectory;
-}
-
-std::vector<mav_trajectory_generation::InputFeasibilityResult>
-		get_feasibility_result(mav_trajectory_generation::Trajectory trajectory)
-{
-	// Check input feasibility for generated trajectory.
-
-	// Create input constraints:
-	typedef mav_trajectory_generation::InputConstraintType ICT;
-	mav_trajectory_generation::InputConstraints input_constraints;
-	input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
-	input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
-	input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
-	input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
-	input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
-	input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].
-
-	mav_trajectory_generation::FeasibilityAnalytic feasibility_check(input_constraints);
-	feasibility_check.settings_.setMinSectionTimeS(0.01);
-
-	mav_trajectory_generation::Segment::Vector segments = trajectory.segments();
-	int vec_size = segments.size();
-	std::vector<mav_trajectory_generation::InputFeasibilityResult> result (vec_size);
-
-	for (unsigned i; i<vec_size; i++) {
-		result[i] = feasibility_check.checkInputFeasibility(segments[i]);
-	}
-
-	return result;
-}
-
-std::string check_feasibility(mav_trajectory_generation::Trajectory trajectory)
-{
-	std::vector<mav_trajectory_generation::InputFeasibilityResult>
-				feasibility_result = get_feasibility_result(trajectory);
-
-	for (unsigned i; i<feasibility_result.size(); i++)
-	{
-		std::string seg_result = mav_trajectory_generation::getInputFeasibilityResultName(
-			feasibility_result[i]);
-		std::cout << "Feasibility result segment " << i << ": " << seg_result << std::endl;
-		if (seg_result != "Feasible") {
-			return "Infeasible";
-		}
-	return "Feasible";
-	}
-}
-
-
-void trajectory_publish(mav_trajectory_generation::Trajectory trajectory)
-{
-	// publish the trajectory as a polynomialTrajectoryMsg:
-	std::cout << "instantiating msg now:" << std::endl;
-	mav_planning_msgs::PolynomialTrajectory4D traj_msg;
-
-	std::cout << "header set" << std::endl;
-	bool success = mav_trajectory_generation::trajectoryToPolynomialTrajectoryMsg(
-											trajectory, &traj_msg);
-
-	ros::Time::init();
-	ros::NodeHandle nh_traj;
-	ros::Rate r(1);
-	ros::Publisher trajectory_pub =
-			nh_traj.advertise<mav_planning_msgs::PolynomialTrajectory4D>(
-					"trajectory", 1);
-
-	if (success) {
-		while(trajectory_pub.getNumSubscribers() < 1) {
-			ROS_WARN_ONCE("Please create a subscriber to the /trajectory rostopic");
-			sleep(1);
+		void flagCallback(const std_msgs::String msg)
+		{
+			// what to do here
 		}
 
-		trajectory_pub.publish(traj_msg);
+		void waypointCallback(const geometry_msgs::PoseArray& pose_array)
+		{
+			int pose_size = pose_array.poses.size();
+
+			mav_trajectory_generation::Vertex start(dimension), end(dimension);
+			start.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[0].position.x,
+																					 pose_array.poses[0].position.y,
+																					 pose_array.poses[0].position.z),
+																					 derivative_to_optimize);
+			waypoints.push_back(start);
+			for (int i=1; i<pose_size-1; i++)
+			{
+				mav_trajectory_generation::Vertex middle(dimension); // a middle waypoint
+				middle.addConstraint(mav_trajectory_generation::derivative_order::POSITION,
+								Eigen::Vector3d(pose_array.poses[i].position.x,
+																pose_array.poses[i].position.y,
+																pose_array.poses[i].position.z));
+				waypoints.push_back(middle);
+			}
+			end.makeStartOrEnd(Eigen::Vector3d(pose_array.poses[pose_size-1].position.x,
+																				 pose_array.poses[pose_size-1].position.y,
+																				 pose_array.poses[pose_size-1].position.z),
+																				 derivative_to_optimize);
+			waypoints.push_back(end);
+
+			get_trajectory();
+			check_feasibility();
+			publish_trajectory();
+		}
+
+		void get_trajectory()
+		{
+			segment_times = mav_trajectory_generation::estimateSegmentTimes(
+				waypoints, v_max, a_max);
+
+      mav_trajectory_generation::PolynomialOptimizationNonLinear<N> opt(
+        dimension, parameters);
+			opt.setupFromVertices(waypoints, segment_times, derivative_to_optimize);
+			opt.addMaximumMagnitudeConstraint(
+				mav_trajectory_generation::derivative_order::VELOCITY, v_max);
+			opt.addMaximumMagnitudeConstraint(
+				mav_trajectory_generation::derivative_order::ACCELERATION, a_max);
+			opt.optimize();
+			opt.getPolynomialOptimizationRef().getSegments(&segments);
+			opt.getTrajectory(&trajectory);
+		}
+
+		void get_feasibility_result()
+		{
+			mav_trajectory_generation::FeasibilityAnalytic feasibility_check(
+        input_constraints);
+			feasibility_check.settings_.setMinSectionTimeS(0.01);
+
+			feasibility_result.reserve(segments.size());
+			for (unsigned i; i<segments.size(); i++)
+			{
+				feasibility_result[i] = feasibility_check.checkInputFeasibility(
+          segments[i]);
+			}
+		}
+
+		void check_feasibility()
+		{
+			get_feasibility_result();
+			for (unsigned i; i<feasibility_result.size(); i++)
+			{
+				std::string seg_result =
+          mav_trajectory_generation::getInputFeasibilityResultName(
+					feasibility_result[i]);
+				if (seg_result != "Feasible")
+				{
+					isFeasible = false;
+				}
+			}
+		}
+
+		void publish_trajectory()
+		{
+			if (isFeasible)
+			{
+				mav_planning_msgs::PolynomialTrajectory4D traj_msg;
+				bool success = mav_trajectory_generation::trajectoryToPolynomialTrajectoryMsg(
+														trajectory, &traj_msg);
+				if (success)
+				{
+					while(traj_pub.getNumSubscribers() < 1) {
+						ROS_WARN_ONCE("Trajectory Generator: Please create a subscriber to the /trajectory rostopic");
+						sleep(1);
+					}
+          ROS_INFO("Trajectory Generator: Generated and published trajectory.");
+					traj_pub.publish(traj_msg);
+				}
+				else
+				{
+					ROS_WARN("Trajectory Generator: Unable to convert trajectory to message format");
+				}
+			}
+			else
+			{
+				ROS_ERROR("Trajectory Generator: Infeasible trajectory segment.");
+			}
+		}
+	}; // TrajGeneratorNode class
+
+	int main(int argc, char **argv)
+	{
+		ros::init(argc, argv, "traj_generator_node");
+    ros::NodeHandle nh;
+    TrajGeneratorNode traj_generator_node(nh);
+    ROS_INFO("Initialized Trajectory Generator Node");
+    ros::spin();
 	}
-	else {
-		std::cout << "Unable to convert trajectory to message format" << std::endl;
-		ROS_WARN("Unable to convert trajectory to message format");
-	}
-	sleep(1);
-}
-
-int main(int argc, char **argv)
-{
-	ros::init(argc, argv, "traj_generator_node");
-	mav_trajectory_generation::Vertex::Vector waypoints = get_waypoints();
-
-	//Get Trajectory:
-	mav_trajectory_generation::Trajectory trajectory = get_trajectory(waypoints);
-
-	// Check input feasibility:
-	std::string feasibility_result = check_feasibility(trajectory);
-	if (feasibility_result == "Infeasible") {
-		ROS_WARN("Infeasible trajectory segment. Failure to publish.");
-		return 0;
-	}
-
-	// Publish trajectory:
-	trajectory_publish(trajectory);
-
-	return 0;
-}
