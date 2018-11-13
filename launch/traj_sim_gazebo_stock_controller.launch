@@ -1,0 +1,9 @@
+<launch>
+  <node name="controller_node" pkg="trajopt" type="controller_node" />
+  <node name="waypoint_pub_node" pkg="trajopt" type="waypoint_publisher_node"
+    output="screen" launch-prefix="gnome-terminal --command" />
+  <node name="traj_gen_node" pkg="trajopt" type="traj_generator_node" />
+  <node name="state_pub_node" pkg="trajopt" type="state_publisher_node" />
+  <node name="gazebo_stock_publisher_node" pkg="trajopt" type="gazebo_stock_publisher_node"
+    output="screen" launch-prefix="gnome-terminal --command" />
+</launch>
