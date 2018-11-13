@@ -152,7 +152,7 @@ void onDesiredState(const trajectory_msgs::MultiDOFJointTrajectoryPoint& des_sta
     //
     // ~~~~ begin solution
     //
-    std::cout << "Getting target state" << std::endl;
+    // std::cout << "Getting target state" << std::endl;
     xd << des_state.transforms[0].translation.x, des_state.transforms[0].translation.y, des_state.transforms[0].translation.z;
     vd << des_state.velocities[0].linear.x, des_state.velocities[0].linear.y, des_state.velocities[0].linear.z;
     ad << des_state.accelerations[0].linear.x, des_state.accelerations[0].linear.y, des_state.accelerations[0].linear.z;
@@ -188,7 +188,7 @@ void onCurrentState(const nav_msgs::Odometry& cur_state){
     //
     // ~~~~ begin solution
     //
-    std::cout << "Getting current state" << std::endl;
+    // std::cout << "Getting current state" << std::endl;
     x << cur_state.pose.pose.position.x, cur_state.pose.pose.position.y, cur_state.pose.pose.position.z;
     v << cur_state.twist.twist.linear.x, cur_state.twist.twist.linear.y, cur_state.twist.twist.linear.z;
     Eigen::Quaterniond q;
