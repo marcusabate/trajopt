@@ -19,6 +19,7 @@ Follow install instructions for the following packages:
 
 **OUTSIDE OF YOUR CATKIN WS**, clone the VNAV 2018 Labs repo:
 * [Labs](https://github.mit.edu/VNAV2018/Labs)
+
 Then copy the unity bridge package from Lab_3 into your catkin workspace:
 ```
 cp -r ${VNAV_LABS_PATH}/Lab_3/unity_bridge ${CATKIN_WS}/src
@@ -85,7 +86,7 @@ source .simbash
 roslaunch aero_quadsim aero_sitl.launch
 ```
 
-Once the simulator has fully loaded, run the simulation:
+Once the simulator has fully loaded, run the simulation (in another terminal):
 ```
 roslaunch trajopt traj_sim_minimal.launch
 ```
