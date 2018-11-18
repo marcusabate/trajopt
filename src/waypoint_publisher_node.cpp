@@ -12,15 +12,16 @@
  *
  */
 
-  #include "std_msgs/String.h"
-  #include "ros/ros.h"
-  #include <geometry_msgs/PoseArray.h>
+#include "std_msgs/String.h"
+#include "ros/ros.h"
+#include <geometry_msgs/PoseArray.h>
 
   class WaypointPublisherNode
   {
   public:
     ros::NodeHandle nh;
     ros::Publisher waypoint_pub;
+    ros::Publisher flag_pub;
     ros::Subscriber flag_sub;
 
     std::vector< std::vector<double> > waypoints;
@@ -35,6 +36,7 @@
     {
       waypoint_pub = nh.advertise<geometry_msgs::PoseArray>(
         "waypoints", 100);
+      flag_pub = nh.advertise<std_msgs::String>("flag_chatter", 10);
       flag_sub = nh.subscribe("flag_chatter", 10,
         &WaypointPublisherNode::flagCallback, this);
 
@@ -75,6 +77,10 @@
 
           waypoint_pub.publish(poseArray);
           publishedOnce = true;
+
+          std_msgs::String flag_msg;
+          flag_msg.data = "WAYPOINTS_PUBLISHED";
+          flag_pub.publish(flag_msg);
         }
         else
         {
@@ -101,8 +107,6 @@
     WaypointPublisherNode waypoint_publisher_node(nh, wps);
     ROS_INFO("Initialized Waypoint Publisher Node");
     waypoint_publisher_node.publish_info();
-
-    // ros::spin(); // only to keep node alive.
 
     return 0;
  }

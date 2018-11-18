@@ -30,7 +30,6 @@
     geometry_msgs::Pose current_pose;
     geometry_msgs::Pose desired_pose;
 
-
     aero_ctrl controller;
     float start_alt;
     double eps;
@@ -52,6 +51,10 @@
 
       controller.arm();
       controller.takeoff(start_alt);
+
+      std_msgs::String gazebo_msg;
+      gazebo_msg.data = "GAZEBO_SIM";
+      flag_pub.publish(gazebo_msg);
 
       std_msgs::String flag_msg;
       flag_msg.data = "START_STATE_PULBISH";

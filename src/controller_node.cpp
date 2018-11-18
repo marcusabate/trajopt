@@ -4,6 +4,7 @@
 #include <nav_msgs/Odometry.h>
 #include <trajectory_msgs/MultiDOFJointTrajectoryPoint.h>
 #include <math.h>
+#include "std_msgs/String.h"
 #define PI M_PI
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,6 +50,7 @@ ros::NodeHandle nh;
 //
  ros::Subscriber desired_state_sub;
  ros::Subscriber current_state_sub;
+ ros::Subscriber flag_sub;
  ros::Publisher rotor_speeds_pub;
  ros::Timer utimer;
 //
@@ -79,6 +81,8 @@ Eigen::Vector3d vd;    // desired velocity of the UAV's c.o.m. in the world fram
 Eigen::Vector3d ad;    // desired acceleration of the UAV's c.o.m. in the world frame
 double yawd;           // desired yaw angle
 double hz;             // frequency of the main control loop
+std::string current_state_topic; // topic to listen to for current_state messages
+std::string rotor_pub_topic;
 static Eigen::Vector3d Vee(const Eigen::Matrix3d& in){
   Eigen::Vector3d out;
   out << in(2,1), in(0,2), in(1,0);
@@ -102,9 +106,13 @@ controllerNode():e3(0,0,1),F2W(4,4),hz(1000.0){
     //
     // ~~~~ begin solution
     //
+    current_state_topic = "/current_state";
+    rotor_pub_topic = "/rotor_speed_cmds";
+
     desired_state_sub = nh.subscribe("/desired_state", 1, &controllerNode::onDesiredState, this);
-    current_state_sub = nh.subscribe("/current_state", 1, &controllerNode::onCurrentState, this);
-    rotor_speeds_pub = nh.advertise<mav_msgs::Actuators>("/rotor_speed_cmds", 1);
+    current_state_sub = nh.subscribe(current_state_topic, 1, &controllerNode::onCurrentState, this);
+    flag_sub = nh.subscribe("/flag_chatter", 10, &controllerNode::flagCallback, this);
+    rotor_speeds_pub = nh.advertise<mav_msgs::Actuators>(rotor_pub_topic, 1);
     utimer = nh.createTimer(ros::Duration(1.0/hz), &controllerNode::controlLoop, this);
     //
     // ~~~~ end solution
@@ -206,6 +214,17 @@ void onCurrentState(const nav_msgs::Odometry& cur_state){
     // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
     //                                 end part 4
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+
+void flagCallback(const std_msgs::String& msg) {
+  if (msg.data == "GAZEBO_SIM") {
+    current_state_topic = "/mavros/local_position/odom";
+    current_state_sub = nh.subscribe(current_state_topic, 1, &controllerNode::onCurrentState, this);
+  }
+  else if (msg.data == "UNITY_SIM") {
+    current_state_topic = "/current_state";
+    current_state_sub = nh.subscribe(current_state_topic, 1, &controllerNode::onCurrentState, this);
+  }
 }
 
 void controlLoop(const ros::TimerEvent& t){

@@ -68,6 +68,10 @@
       flag_sub = nh.subscribe("flag_chatter", 10,
         &rvizPublisherNode::flagCallback, this);
       ros::Rate r(1);
+
+      std_msgs::String unity_msg;
+      unity_msg.data = "UNITY_SIM";
+      flag_pub.publish(unity_msg);
     }
 
     void trajCallback(const mav_planning_msgs::PolynomialTrajectory4D& segments_message)

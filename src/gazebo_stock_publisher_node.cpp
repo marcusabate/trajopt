@@ -51,6 +51,10 @@
       controller.arm();
       controller.takeoff(start_alt);
 
+      std_msgs::String unity_msg;
+      unity_msg.data = "UNITY_SIM";
+      flag_pub.publish(unity_msg);
+
       std_msgs::String flag_msg;
       flag_msg.data = "START_STATE_PULBISH";
       flag_pub.publish(flag_msg);
@@ -104,7 +108,7 @@
 
     void flagCallback(const std_msgs::String msg)
 		{
-			if (msg.data == "END_DESIRED_STATE_PUBLISH")
+		  if (msg.data == "END_DESIRED_STATE_PUBLISH")
       {
         ros::Rate rate(30);
 
