@@ -27,6 +27,7 @@
     ros::Publisher command_pub;
     ros::Publisher flag_pub;
     ros::Subscriber trajectory_sub;
+    ros::Subscriber flag_sub;
     ros::Time start_time;
 
     double dt;
@@ -44,6 +45,8 @@
       flag_pub = nh.advertise<std_msgs::String>("flag_chatter", 1);
       trajectory_sub = nh.subscribe("trajectory", 10,
         &StatePublisherNode::trajCallback, this);
+      flag_sub = nh.subscribe("flag_chatter", 10,
+        &StatePublisherNode::flagCallback, this);
       publish_timer = nh.createTimer(ros::Duration(dt),
         &StatePublisherNode::commandTimerCallback, this);
       ros::Rate r(1);
@@ -66,9 +69,6 @@
         ROS_WARN("State Publisher: Failure to Convert Trajectory Message");
         return;
       }
-      publish_timer.start();
-      current_sample_time = 0.0;
-      start_time = ros::Time::now();
     }
 
     void commandTimerCallback(const ros::TimerEvent&)
@@ -98,6 +98,16 @@
         publish_timer.stop();
       }
     }
+
+    void flagCallback(const std_msgs::String msg)
+		{
+			if (msg.data == "START_STATE_PULBISH")
+      {
+        publish_timer.start();
+        current_sample_time = 0.0;
+        start_time = ros::Time::now();
+      }
+		}
  }; // class StatePublisherNode
 
  int main(int argc, char** argv)

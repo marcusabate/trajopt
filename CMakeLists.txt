@@ -143,6 +143,7 @@ add_executable(rviz_publisher_node src/rviz_publisher_node.cpp)
 add_executable(state_publisher_node src/state_publisher_node.cpp)
 add_executable(waypoint_publisher_node src/waypoint_publisher_node.cpp)
 add_executable(gazebo_stock_publisher_node src/gazebo_stock_publisher_node.cpp ../aero_quadsim/src/aero_ctrl.cpp)
+add_executable(gazebo_custom_publisher_node src/gazebo_custom_publisher_node.cpp ../aero_quadsim/src/aero_ctrl.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,6 +163,7 @@ add_dependencies(rviz_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catki
 add_dependencies(state_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(waypoint_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(gazebo_stock_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(gazebo_custom_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -192,6 +194,9 @@ target_link_libraries(waypoint_publisher_node
   ${catkin_LIBRARIES}
 )
 target_link_libraries(gazebo_stock_publisher_node
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(gazebo_custom_publisher_node
   ${catkin_LIBRARIES}
 )
 

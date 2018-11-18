@@ -35,8 +35,8 @@
     {
       waypoint_pub = nh.advertise<geometry_msgs::PoseArray>(
         "waypoints", 100);
-      // flag_sub = nh.subscribe("flag_chatter", 10,
-      //   &WaypointPublisherNode::flagCallback, this);
+      flag_sub = nh.subscribe("flag_chatter", 10,
+        &WaypointPublisherNode::flagCallback, this);
 
       waypoints = wps;
       rotation.x = 0;
@@ -44,6 +44,11 @@
       rotation.z = 0;
       rotation.w = 1;
     }
+
+    void flagCallback(const std_msgs::String msg)
+		{
+			// what to do here
+		}
 
     void publish_info()
     {
@@ -84,8 +89,9 @@
     ros::init(argc, argv, "waypoint_publisher_node");
     ros::NodeHandle nh;
 
-    std::vector< std::vector<double> > wps =
-    { {1,1,1},{2,2,2},{3,3,3},{4,4,4},{5,5,5},{5,5,0} };
+    std::vector< std::vector<double> > wps;
+    //wps = { {1,1,1},{2,2,2},{3,3,3},{4,4,4},{5,5,5},{10,15,30},{20,15,20} };
+    wps = { {1,1,1},{2,2,2},{3,6,3},{4,-3,3},{5,4,3},{6,-6,3},{7,5,3},{8,0,2} };
 
     std::cout << "Press any key to start simulation" << std::endl;
     std::string input;

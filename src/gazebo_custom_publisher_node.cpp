@@ -1,8 +1,10 @@
-/* gazebo_stock_publisher_node.cpp
+/* gazebo_custom_publisher_node.cpp
  *
  * Grab setpoint information from /desired_state and publish it to gazebo
  * aero_quadsim is used to visualize the px4 drone and its response to the given
- * setpoint. The onboard controller is used in this implementation.
+ * setpoint.
+ * This implementation uses the controller_node controller to generate actuator
+ * commands.
  *
  */
 
@@ -69,37 +71,6 @@
       desired_pose.position.y = desired_state.transforms[0].translation.y;
       desired_pose.position.z = desired_state.transforms[0].translation.z;
       desired_pose.orientation = desired_state.transforms[0].rotation;
-
-      // ros::Rate rate(30);
-      //
-      // while(sqrt((current_pose.position.x - desired_pose.position.x)*(current_pose.position.x - desired_pose.position.x) +
-      //            (current_pose.position.y - desired_pose.position.y)*(current_pose.position.y - desired_pose.position.y) +
-      //            (current_pose.position.z - desired_pose.position.z)*(current_pose.position.z - desired_pose.position.z)) > eps)
-      // {
-      //   controller.set_setpt(desired_pose.position.x,
-      //                        desired_pose.position.y,
-      //                        desired_pose.position.z,
-      //                        desired_pose.orientation);
-      //   rate.sleep();
-      // }
-
-      // double x = desired_state.transforms[0].translation.x;
-      // double y = desired_state.transforms[0].translation.y;
-      // double z = desired_state.transforms[0].translation.z;
-      // tf::Quaternion quat(desired_state.transforms[0].rotation.x,
-      //                     desired_state.transforms[0].rotation.y,
-      //                     desired_state.transforms[0].rotation.z,
-      //                     desired_state.transforms[0].rotation.w);
-      // tf::Matrix3x3 m(quat);
-      // double roll, pitch, yaw;
-      // m.getRPY(roll, pitch, yaw);
-      //
-      // controller.navigate_to_pose(x, y, z, yaw);
-
-      controller.set_setpt(desired_pose.position.x,
-                            desired_pose.position.y,
-                            desired_pose.position.z,
-                            desired_pose.orientation);
     }
 
     void flagCallback(const std_msgs::String msg)
@@ -127,9 +98,9 @@
 
   int main(int argc, char** argv)
   {
-   ros::init(argc, argv, "gazebo_stock_publisher_node");
+   ros::init(argc, argv, "gazebo_custom_publisher_node");
    ros::NodeHandle nh;
-   GazeboController gazebo_stock_publisher_node(nh);
-   ROS_INFO("Initialized Gazebo Stock Publisher Node");
+   GazeboController gazebo_custom_publisher_node(nh);
+   ROS_INFO("Initialized Gazebo Custom Publisher Node");
    ros::spin();
   }

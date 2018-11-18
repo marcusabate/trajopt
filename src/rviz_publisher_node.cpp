@@ -28,13 +28,14 @@
     ros::Publisher traj_pub;
     ros::Publisher current_state_pub;
     ros::Publisher desired_state_pub;
+    ros::Publisher flag_pub;
     ros::Subscriber trajectory_sub;
     ros::Subscriber current_state_sub;
     ros::Subscriber desired_state_sub;
     ros::Subscriber flag_sub;
 
     bool PUBLISH_CURRENT_STATE = true;
-    bool PUBLISH_DESIRED_STATE = false;
+    bool PUBLISH_DESIRED_STATE = true;
 
     mav_trajectory_generation::Trajectory trajectory;
 
@@ -57,6 +58,7 @@
       //   "odometry_1", 0);
       desired_state_pub = nh.advertise<visualization_msgs::MarkerArray>(
         "visualization_marker_array_3", 0);
+      flag_pub = nh.advertise<std_msgs::String>("flag_chatter", 1);
       trajectory_sub = nh.subscribe("trajectory", 10,
         &rvizPublisherNode::trajCallback, this);
       current_state_sub = nh.subscribe("current_state", 1000,
@@ -86,6 +88,10 @@
         return;
       }
       rviz_traj_publish();
+
+      std_msgs::String flag_msg;
+      flag_msg.data = "START_STATE_PULBISH";
+      flag_pub.publish(flag_msg);
     }
 
     void currentStateSubCallback(const nav_msgs::Odometry& current_state)

@@ -55,7 +55,7 @@ def talker(point_list):
 		rate.sleep()
 
 if __name__ == '__main__':
-    try:
+	try:
 		talker(build_point_list(waypoints))
-    except rospy.ROSInterruptException:
-        pass
+	except rospy.ROSInterruptException:
+    	pass
