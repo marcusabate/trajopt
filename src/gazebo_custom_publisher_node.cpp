@@ -9,7 +9,7 @@
  */
 
  #include <math.h>
- #include "../../aero_quadsim/src/aero_ctrl.h"
+ #include "../../aero_control/src/aero_ctrl.h"
  #include <ros/ros.h>
  #include <ros/console.h>
  #include <geometry_msgs/Pose.h>

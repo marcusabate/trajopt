@@ -7,7 +7,7 @@
  */
 
  #include <math.h>
- #include "../../aero_quadsim/src/aero_ctrl.h"
+ #include "../../aero_control/src/aero_ctrl.h"
  #include <ros/ros.h>
  #include <ros/console.h>
  #include <geometry_msgs/Pose.h>
@@ -46,7 +46,7 @@
         &GazeboController::flagCallback, this);
 
       start_alt = 1.0;
-      eps = 0.08;
+      eps = 0.1;
 
       controller.arm();
       controller.takeoff(start_alt);

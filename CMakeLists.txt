@@ -142,8 +142,8 @@ add_executable(traj_generator_node src/traj_generator_node.cpp)
 add_executable(rviz_publisher_node src/rviz_publisher_node.cpp)
 add_executable(state_publisher_node src/state_publisher_node.cpp)
 add_executable(waypoint_publisher_node src/waypoint_publisher_node.cpp)
-add_executable(gazebo_stock_publisher_node src/gazebo_stock_publisher_node.cpp ../aero_quadsim/src/aero_ctrl.cpp)
-add_executable(gazebo_custom_publisher_node src/gazebo_custom_publisher_node.cpp ../aero_quadsim/src/aero_ctrl.cpp)
+add_executable(gazebo_stock_publisher_node src/gazebo_stock_publisher_node.cpp ../aero_control/src/aero_ctrl.cpp)
+add_executable(gazebo_custom_publisher_node src/gazebo_custom_publisher_node.cpp ../aero_control/src/aero_ctrl.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
