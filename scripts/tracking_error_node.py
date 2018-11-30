@@ -8,7 +8,7 @@
     This script gathers data on the desired state and the current state of the
     drone at every time step during the gazebo simulation. The tracking error
     is then computed in several important states for each time step and
-    visualized graphically after flight.
+    visualized graphically post flight.
     The script also calculates a measure of tracking error overall. This is the
     integral of the error between desired and current position states across
     the whole trajectory. This can be used to compare different controller
@@ -18,6 +18,7 @@
 import rospy
 from trajectory_msgs.msg import MultiDOFJointTrajectoryPoint
 from geometry_msgs.msg import Point, Quaternion, Pose, PoseStamped
+from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 import math
 import matplotlib.pyplot as plt
@@ -26,7 +27,8 @@ class TrackingErrorNode:
     def __init__(self):
         self.flag_sub = rospy.Subscriber('flag_chatter', String, self.flagSubCallback)
         self.desired_state_sub = rospy.Subscriber('desired_state', MultiDOFJointTrajectoryPoint, self.desiredStateSubCallback)
-        self.current_state_sub = rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.currentStateSubCallback)
+        # self.current_state_sub = rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.currentStateSubCallback) # use with gazebo
+        self.current_state_sub = rospy.Subscriber('current_state', Odometry, self.currentStateSubCallback) # use with unity
         self.des_x = []
         self.des_y = []
         self.des_z = []
@@ -47,9 +49,15 @@ class TrackingErrorNode:
 
     def currentStateSubCallback(self, current_state):
         if len(self.cur_x) <= len(self.des_x) or len(self.cur_x) == 0:
-            self.cur_x.append(current_state.pose.position.x)
-            self.cur_y.append(current_state.pose.position.y)
-            self.cur_z.append(current_state.pose.position.z)
+            # for use with gazebo (PoseStamped message):
+            # self.cur_x.append(current_state.pose.position.x)
+            # self.cur_y.append(current_state.pose.position.y)
+            # self.cur_z.append(current_state.pose.position.z)
+
+            # for use with unity (Odometry message):
+            self.cur_x.append(current_state.pose.pose.position.x)
+            self.cur_y.append(current_state.pose.pose.position.y)
+            self.cur_z.append(current_state.pose.pose.position.z)
 
     def flagSubCallback(self, msg):
         if msg.data == 'END_DESIRED_STATE_PUBLISH':
@@ -92,8 +100,8 @@ class TrackingErrorNode:
         plt.plot(self.tracking_error)
         plt.title('Overall Position Tracking Error')
 
-        legend = ['Desired', 'Actual']
 
+        legend = ['Desired', 'Actual']
         plt.figure(2)
         plt.subplot(311)
         plt.plot(self.des_x)
