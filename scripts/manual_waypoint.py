@@ -58,4 +58,4 @@ if __name__ == '__main__':
 	try:
 		talker(build_point_list(waypoints))
 	except rospy.ROSInterruptException:
-    	pass
+		pass

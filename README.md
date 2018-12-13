@@ -14,8 +14,8 @@ Simulation/visualization is done via yunchang's gazebo simulator [aero_quadsim](
 ## Install Instructions
 
 Follow install instructions for the following packages:
-* [mav_trajectory_generation](https://github.com/ethz-asl/mav_trajectory_generation)
-* [aero_quadsim](https://github.mit.edu/yunchang/aero_quadsim)
+* [mav_trajectory_generation](https://github.com/ethz-asl/mav_trajectory_generation) commit 33c9afc19f7a16470462618dffaeea4c7aefdf1c
+* [aero_quadsim](https://github.mit.edu/yunchang/aero_quadsim) commit 6eefe4384141d332a717cb7ed6079ba1331802c8
 
 **OUTSIDE OF YOUR CATKIN WS**, clone the VNAV 2018 Labs repo:
 * [Labs](https://github.mit.edu/VNAV2018/Labs)

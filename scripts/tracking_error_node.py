@@ -27,8 +27,8 @@ class TrackingErrorNode:
     def __init__(self):
         self.flag_sub = rospy.Subscriber('flag_chatter', String, self.flagSubCallback)
         self.desired_state_sub = rospy.Subscriber('desired_state', MultiDOFJointTrajectoryPoint, self.desiredStateSubCallback)
-        # self.current_state_sub = rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.currentStateSubCallback) # use with gazebo
-        self.current_state_sub = rospy.Subscriber('current_state', Odometry, self.currentStateSubCallback) # use with unity
+        self.current_state_sub = rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.currentStateSubCallback) # use with gazebo
+        # self.current_state_sub = rospy.Subscriber('current_state', Odometry, self.currentStateSubCallback) # use with unity
         self.des_x = []
         self.des_y = []
         self.des_z = []
@@ -50,14 +50,14 @@ class TrackingErrorNode:
     def currentStateSubCallback(self, current_state):
         if len(self.cur_x) <= len(self.des_x) or len(self.cur_x) == 0:
             # for use with gazebo (PoseStamped message):
-            # self.cur_x.append(current_state.pose.position.x)
-            # self.cur_y.append(current_state.pose.position.y)
-            # self.cur_z.append(current_state.pose.position.z)
+            self.cur_x.append(current_state.pose.position.x)
+            self.cur_y.append(current_state.pose.position.y)
+            self.cur_z.append(current_state.pose.position.z)
 
             # for use with unity (Odometry message):
-            self.cur_x.append(current_state.pose.pose.position.x)
-            self.cur_y.append(current_state.pose.pose.position.y)
-            self.cur_z.append(current_state.pose.pose.position.z)
+            # self.cur_x.append(current_state.pose.pose.position.x)
+            # self.cur_y.append(current_state.pose.pose.position.y)
+            # self.cur_z.append(current_state.pose.pose.position.z)
 
     def flagSubCallback(self, msg):
         if msg.data == 'END_DESIRED_STATE_PUBLISH':

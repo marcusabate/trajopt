@@ -61,6 +61,7 @@
      //a_max(2.0),
      v_max(15.0),
      a_max(15.0),
+     // a_max(20.0),
      derivative_to_optimize(mav_trajectory_generation::derivative_order::SNAP)
 		{
 			traj_pub = nh.advertise<mav_planning_msgs::PolynomialTrajectory4D>(
@@ -91,9 +92,10 @@
 
 			input_constraints.addConstraint(ICT::kFMin, 0.5 * 9.81); // minimum acceleration in [m/s/s].
 			// input_constraints.addConstraint(ICT::kFMax, 1.5 * 9.81); // maximum acceleration in [m/s/s].
-      input_constraints.addConstraint(ICT::kFMax, 15 * 9.81);
+      // input_constraints.addConstraint(ICT::kFMax, 15 * 9.81);
+      input_constraints.addConstraint(ICT::kFMax, a_max * 9.81);
 			//input_constraints.addConstraint(ICT::kVMax, 3.5); // maximum velocity in [m/s].
-      input_constraints.addConstraint(ICT::kVMax, 15);
+      input_constraints.addConstraint(ICT::kVMax, v_max);
 			input_constraints.addConstraint(ICT::kOmegaXYMax, M_PI / 2.0); // maximum roll/pitch rates in [rad/s].
 			input_constraints.addConstraint(ICT::kOmegaZMax, M_PI / 2.0); // maximum yaw rates in [rad/s].
 			input_constraints.addConstraint(ICT::kOmegaZDotMax, M_PI); // maximum yaw acceleration in [rad/s/s].

@@ -44,11 +44,11 @@
       flag_pub = nh.advertise<std_msgs::String>("flag_chatter", 1);
       position_target_pub = nh.advertise<mavros_msgs::PositionTarget>("mavros/setpoint_raw/local", 1);
       velocity_target_pub = nh.advertise<geometry_msgs::Twist>("mavros/setpoint_velocity/cmd_vel_unstamped", 1);
-      desired_state_sub = nh.subscribe("desired_state", 1000,
+      desired_state_sub = nh.subscribe("desired_state", 1,
         // &GazeboController::desiredStateSubCallback_vel_cmd, this);
-        // &GazeboController::desiredStateSubCallback_raw_local, this);
-        &GazeboController::desiredStateSubCallback, this);
-      current_state_sub = nh.subscribe("mavros/local_position/pose", 1000,
+        &GazeboController::desiredStateSubCallback_raw_local, this);
+        // &GazeboController::desiredStateSubCallback, this);
+      current_state_sub = nh.subscribe("mavros/local_position/pose", 1,
         &GazeboController::currentStateSubCallback, this);
       flag_sub = nh.subscribe("flag_chatter", 10,
         &GazeboController::flagCallback, this);
@@ -122,12 +122,12 @@
       // position_target.type_mask = mavros_msgs::PositionTarget::IGNORE_YAW_RATE | mavros_msgs::PositionTarget::IGNORE_YAW;
       position_target.type_mask = mavros_msgs::PositionTarget::IGNORE_YAW_RATE |
         mavros_msgs::PositionTarget::IGNORE_YAW |
-        mavros_msgs::PositionTarget::IGNORE_PX |
-        mavros_msgs::PositionTarget::IGNORE_PY |
-        mavros_msgs::PositionTarget::IGNORE_PZ |
-        // mavros_msgs::PositionTarget::IGNORE_VX |
-        // mavros_msgs::PositionTarget::IGNORE_VY |
-        // mavros_msgs::PositionTarget::IGNORE_VZ |
+        // mavros_msgs::PositionTarget::IGNORE_PX |
+        // mavros_msgs::PositionTarget::IGNORE_PY |
+        // mavros_msgs::PositionTarget::IGNORE_PZ |
+        mavros_msgs::PositionTarget::IGNORE_VX |
+        mavros_msgs::PositionTarget::IGNORE_VY |
+        mavros_msgs::PositionTarget::IGNORE_VZ |
         mavros_msgs::PositionTarget::IGNORE_AFX |
         mavros_msgs::PositionTarget::IGNORE_AFY |
         mavros_msgs::PositionTarget::IGNORE_AFZ;
