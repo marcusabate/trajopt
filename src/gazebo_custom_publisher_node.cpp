@@ -86,10 +86,10 @@
                    (current_pose.position.y - desired_pose.position.y)*(current_pose.position.y - desired_pose.position.y) +
                    (current_pose.position.z - desired_pose.position.z)*(current_pose.position.z - desired_pose.position.z)) > eps)
         {
-          controller.set_setpt(desired_pose.position.x,
-                               desired_pose.position.y,
-                               desired_pose.position.z,
-                               desired_pose.orientation);
+          // controller.set_setpt(desired_pose.position.x,
+          //                      desired_pose.position.y,
+          //                      desired_pose.position.z,
+          //                      desired_pose.orientation);
           rate.sleep();
         }
 

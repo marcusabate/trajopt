@@ -96,13 +96,16 @@
     ros::NodeHandle nh;
 
     std::vector< std::vector<double> > wps;
-    //wps = { {1,1,1},{2,2,2},{3,3,3},{4,4,4},{5,5,5},{10,15,30},{20,15,20} };
-    wps = { {1,1,1},{2,2,2},{3,6,3},{4,-3,3},{5,4,3},{6,-6,3},{7,5,3},{8,0,2} };
+    // wps = { {0,0,1},{0,0,2},{0,0,3},{0,0,4} };
+    // wps = { {1,1,1},{2,2,1},{3,3,1},{4,4,1},{5,5,1},{6,6,1},{7,7,1} };
+    wps = { {1,0,1},{2,0,1},{3,0,1},{4,0,1},{5,0,1},{6,0,1},{7,0,1} };
+    // wps = { {1,1,1},{2,2,2},{3,6,3},{4,-3,3},{5,4,3},{6,-6,3},{7,5,3},{8,0,2} };
 
-    std::cout << "Press any key to start simulation" << std::endl;
-    std::string input;
-    std::cin >> input;
-    std::cout << "Starting sim" << std::endl;
+    // USE THE FOLLOWING TO PROMPT USER FOR SIMULATION START:
+    // std::cout << "Press any key to start simulation" << std::endl;
+    // std::string input;
+    // std::cin >> input;
+    // std::cout << "Starting sim" << std::endl;
 
     WaypointPublisherNode waypoint_publisher_node(nh, wps);
     ROS_INFO("Initialized Waypoint Publisher Node");
